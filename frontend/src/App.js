@@ -1,39 +1,45 @@
-import logo from "./logo.svg";
+import { useEffect, useReducer } from "react";
 import "./App.css";
-import { useEffect, useState } from "react";
 import axios from "axios";
+import Home from "./pages/Home";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import New from "./pages/New";
+
+const reducer = (state, action) => {
+  let newState = [];
+  switch (action.type) {
+    case "INIT": {
+      return; // action.data
+    }
+    default:
+      return state;
+  }
+  return newState;
+};
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, dispatch] = useReducer(reducer, []);
 
   useEffect(() => {
     axios
-      .get("/api/test")
-      .then((res) => setData(res.data))
-      .catch((error) => console.log("에러", error));
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => {
+        dispatch({ type: "INIT", data: res.data });
+      })
+      .catch((error) => console.log("error", error));
   }, []);
 
-  console.log(data);
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <div>
-          {data.map((item) => (
-            <p>{item.name}</p>
-          ))}
-        </div>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/new" element={<New />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 
