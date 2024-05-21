@@ -2,7 +2,6 @@ import "./App.css";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import Home from "./pages/Home";
 import New from "./pages/New";
@@ -25,8 +24,6 @@ function App() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [accessToken, setAccessToken] = useState("");
-
-  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   const callPost = async () => {
     await axios
@@ -169,57 +166,49 @@ function App() {
   }, [accessToken, isLogin]);
 
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <PostStateContext.Provider
+    <PostStateContext.Provider
+      value={{
+        post,
+        category,
+        viewedPost,
+        selectedCategoryId,
+        postListLength,
+        isSecertMode,
+        isLogin,
+        accessToken,
+      }}
+    >
+      <PostDispatchContext.Provider
         value={{
-          post,
-          category,
-          viewedPost,
-          selectedCategoryId,
-          postListLength,
-          isSecertMode,
-          isLogin,
-          accessToken,
+          callPost,
+          callCategories,
+          getViewedPost,
+          changeCategoryId,
+          handleToggleLoginModal,
+          handleToggleLogin,
+          setToken,
+          deleteToken,
         }}
       >
-        <PostDispatchContext.Provider
-          value={{
-            callPost,
-            callCategories,
-            getViewedPost,
-            changeCategoryId,
-            handleToggleLoginModal,
-            handleToggleLogin,
-            setToken,
-            deleteToken,
-          }}
-        >
-          <BrowserRouter>
-            <div className="App">
-              <meta name="google-signin-client_id" content={googleClientId} />
-              <script
-                src="https://accounts.google.com/gsi/client"
-                async
-                defer
-              ></script>
-              <main>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/new" element={<New />} />
-                  <Route path="/post/:id" element={<PostPage />} />
-                  <Route path="/edit/:id" element={<Edit />} />
-                  <Route
-                    path="/post/search/:searchKeyword"
-                    element={<Search />}
-                  />
-                </Routes>
-              </main>
-              <LoginModal loginModalOpen={loginModalOpen} />
-            </div>
-          </BrowserRouter>
-        </PostDispatchContext.Provider>
-      </PostStateContext.Provider>
-    </GoogleOAuthProvider>
+        <BrowserRouter>
+          <div className="App">
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/new" element={<New />} />
+                <Route path="/post/:id" element={<PostPage />} />
+                <Route path="/edit/:id" element={<Edit />} />
+                <Route
+                  path="/post/search/:searchKeyword"
+                  element={<Search />}
+                />
+              </Routes>
+            </main>
+            <LoginModal loginModalOpen={loginModalOpen} />
+          </div>
+        </BrowserRouter>
+      </PostDispatchContext.Provider>
+    </PostStateContext.Provider>
   );
 }
 
