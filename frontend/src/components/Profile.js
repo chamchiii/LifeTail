@@ -1,3 +1,5 @@
+import React from "react";
+
 import profile from "../assets/images/avatar.png";
 
 const Profile = () => {
@@ -12,4 +14,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default React.memo(Profile);
