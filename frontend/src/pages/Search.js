@@ -17,12 +17,6 @@ const Search = () => {
     }
   }, [searchKeyword]);
 
-  // useEffect(() => {
-  //   if (searchData && searchData.length >= 1) {
-  //     console.log("searchData", searchData);
-  //   }
-  // }, [searchData]);
-
   const search = async () => {
     await axios.get(`/api/post/search/${searchKeyword}`).then((res) => {
       const resMap = res.data.map((it) => {
@@ -47,20 +41,16 @@ const Search = () => {
       <Header />
       <div className="result_count_area">
         <div className="result_count">
-          {
-            searchData && searchData.length >= 1 ? (
-              <span>
-                &quot;<span className="text_high_light">{searchKeyword}</span>
-                &quot; 검색 결과 총 &quot;
-                <span className="text_high_light">{searchData.length}</span>
-                &quot;개 검색되었습니다.
-              </span>
-            ) : (
-              <span>{searchKeyword} 검색 결과가 없습니다.</span>
-            )
-            // ? `"${searchKeyword}" 검색 결과 총 ${searchData.length}개 검색되었습니다.`
-            // : `"${searchKeyword} 검색 결과가 없습니다."`
-          }
+          {searchData && searchData.length >= 1 ? (
+            <span>
+              &quot;<span className="text_high_light">{searchKeyword}</span>
+              &quot; 검색 결과 총 &quot;
+              <span className="text_high_light">{searchData.length}</span>
+              &quot;개 검색되었습니다.
+            </span>
+          ) : (
+            <span>{searchKeyword} 검색 결과가 없습니다.</span>
+          )}
         </div>
       </div>
       <div className="content_area search_page">

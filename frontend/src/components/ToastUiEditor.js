@@ -47,7 +47,7 @@ const ToastUiEditor = ({ search, isEdit, isNew }) => {
       .then((res) => {
         callback(res.data);
       })
-      .catch((err) => console.log("onUploadImage() ERROR : ", err));
+      .catch((err) => console.log("onUploadImage() ERROR : "));
   };
 
   const handleChange = () => {
@@ -62,7 +62,6 @@ const ToastUiEditor = ({ search, isEdit, isNew }) => {
         isNew={isNew}
         content={postContent}
         editData={{ title: targetPost.title }}
-        // onClick={handleSave}
       />
       <Editor
         ref={editorRef}

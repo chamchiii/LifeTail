@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import Pagination from "../util/Pagination";
 
 const PostsList = ({ isSearch, post }) => {
-  const { selectedCategoryId, isSecertMode } = useContext(PostStateContext);
+  const { selectedCategoryId, isSecretMode } = useContext(PostStateContext);
   const [postList, setPostList] = useState([]);
   const [slicePostList, setSlicePostList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,7 +20,6 @@ const PostsList = ({ isSearch, post }) => {
         const targetPosts = post.filter(
           (it) => parseInt(it.categoryId) === parseInt(selectedCategoryId)
         );
-        // post.find((it) => parseInt(it.it) === parseInt(selectedCategoryId));
         setPostList(targetPosts);
       }
     }
@@ -40,7 +39,7 @@ const PostsList = ({ isSearch, post }) => {
       <section className="postsList">
         {slicePostList.length > 0 ? (
           slicePostList.map((it) => (
-            <Post key={it.id} data={it} isSecertMode={isSecertMode}></Post>
+            <Post key={it.id} data={it} isSecretMode={isSecretMode}></Post>
           ))
         ) : (
           <div className="no_posts_with_category">

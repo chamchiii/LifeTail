@@ -19,9 +19,13 @@ const Header = ({ search, isEdit, isNew, content }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { callPost, callCategories, handleToggleLoginModal, deleteToken } =
-    useContext(PostDispatchContext);
-  const { isLogin, accessToken } = useContext(PostStateContext);
+  const {
+    callPost,
+    callCategories,
+    handleToggleLoginModal,
+    handleToggleLogin,
+  } = useContext(PostDispatchContext);
+  const { isLogin, accessToken, userRole } = useContext(PostStateContext);
 
   const [visible, setVisible] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -50,6 +54,10 @@ const Header = ({ search, isEdit, isNew, content }) => {
   };
 
   const handleNewPost = () => {
+    if (!isLogin || userRole.toUpperCase() !== "ADMIN") {
+      alert("현재 글 작성 기능은 관리자만 가능하도록 개발하였습니다.");
+      return;
+    }
     navigate("/new");
   };
 
@@ -82,7 +90,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
 
   const handleSavePost = async () => {
     let headers;
-    if (accessToken && accessToken !== "") {
+    if (accessToken) {
       headers = addToHeader(accessToken);
     }
     if (isNew) {
@@ -105,7 +113,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
           navigate("/", { replace: true });
         })
         .catch((err) => {
-          console.log("handleSavePost()_new ERROR : ", err);
+          console.log("handleSavePost()_new ERROR : ");
         });
     } else {
       await axios
@@ -129,13 +137,16 @@ const Header = ({ search, isEdit, isNew, content }) => {
         })
         .catch((err) => {
           alert("오류로 인하여 수정 실패하였습니다.");
-          console.log("handleSavePost()_edit ERROR : ", err);
+          console.log("handleSavePost()_edit ERROR : ");
         });
     }
   };
 
   const handleClickLogout = () => {
-    deleteToken();
+    if (!window.confirm("로그아웃 하시겠습니까?")) {
+      return;
+    }
+    handleToggleLogin(false);
     navigate("/", { replace: true });
   };
 

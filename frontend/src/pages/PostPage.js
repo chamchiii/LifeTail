@@ -17,8 +17,9 @@ const PostPage = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const { post, accessToken } = useContext(PostStateContext);
-  const { callPost, callCategories } = useContext(PostDispatchContext);
+  const { post, accessToken, isSecretMode } = useContext(PostStateContext);
+  const { callPost, callCategories, getViewedPost } =
+    useContext(PostDispatchContext);
 
   const [data, setData] = useState();
   const [sameCategoryPost, setSameCategoryPost] = useState([]);
@@ -36,17 +37,28 @@ const PostPage = () => {
       if (targetPost) {
         setData(targetPost);
       } else {
-        alert("존재하지 않는 일기장입니다. 홈으로 이동합니다.");
+        alert("존재하지 않는 글 입니다. 홈으로 이동합니다.");
         navigate("/", { replace: true });
       }
       if (targetPost) {
         setSameCategoryPost(prevNextPost(sameCategoryPosts, postIndex));
       }
     }
-    if (id) {
+    if (id && !isSecretMode) {
       callComment(id);
+      let viewedPost = [];
+      const viewPost = JSON.parse(localStorage.getItem("viewedPost"));
+      const uniqueViewedPost = Array.from(new Set(viewPost));
+      if (uniqueViewedPost) {
+        viewedPost = uniqueViewedPost.filter(
+          (it) => parseInt(it) !== parseInt(id)
+        );
+      }
+      viewedPost.push(id);
+      localStorage.setItem("viewedPost", JSON.stringify(viewedPost));
+      getViewedPost();
     }
-  }, [id, post]);
+  }, [id, post, isSecretMode]);
 
   const callComment = async (postId) => {
     console.log("callComment() 실행");
@@ -64,7 +76,7 @@ const PostPage = () => {
         }));
         setCommentList(resCommentList);
       })
-      .catch((err) => console.log("callPost() ERROR : ", err));
+      .catch((err) => console.log("callPost() ERROR : "));
   };
 
   const prevNextPost = (arr, index) => {
@@ -97,7 +109,7 @@ const PostPage = () => {
           callCategories();
           navigate("/", { replace: true });
         })
-        .catch((err) => console.log("handleClickDelete() ERROR : ", err));
+        .catch((err) => console.log("handleClickDelete() ERROR : "));
     }
   };
 

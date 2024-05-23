@@ -19,7 +19,7 @@ const Comment = ({ comment, callComment }) => {
     await axios
       .delete(`/api/comment/${comment.id}`)
       .then((res) => callComment(comment.postId))
-      .catch((err) => console.log("deleteComment() ERROR : ", err));
+      .catch((err) => console.log("deleteComment() ERROR : "));
   };
 
   const updateComment = async () => {
@@ -39,7 +39,7 @@ const Comment = ({ comment, callComment }) => {
         content: changedContent,
       })
       .then((res) => callComment(comment.postId))
-      .catch((err) => console.log("updateComment() ERROR : ", err));
+      .catch((err) => console.log("updateComment() ERROR : "));
   };
 
   const handleChangeContent = (e) => {

@@ -20,10 +20,12 @@ function App() {
   const [category, setCategory] = useState([]);
   const [viewedPost, setViewedPost] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(-1);
-  const [isSecertMode, setIsSecertMode] = useState(false);
+  const [isSecretMode, setIsSecretMode] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [accessToken, setAccessToken] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [userId, setUserId] = useState("");
 
   const callPost = async () => {
     await axios
@@ -46,9 +48,7 @@ function App() {
         setPost(resMap);
         setPostListLength(resMap.length);
       })
-      .catch((error) =>
-        console.log("page open error - call all post list", error)
-      );
+      .catch((err) => console.log("page open error - call all post list"));
   };
 
   const callCategories = async () => {
@@ -62,38 +62,18 @@ function App() {
         }));
         setCategory(responseToMap);
       })
-      .catch((err) => console.log("callCategories() ERROR : ", err));
+      .catch((err) => console.log("callCategories() ERROR : "));
   };
-
-  // const callComment = async (postId) => {
-  //   let commentList;
-  //   await axios
-  //     .get(`/api/comment/${postId}`)
-  //     .then((res) => {
-  //       const resCommentList = res.data.map((it) => ({
-  //         id: it.id,
-  //         postId: it.postId,
-  //         writer: it.writer,
-  //         password: it.password,
-  //         content: it.content,
-  //         createDt: it.createDt,
-  //         updateDt: it.updateDt,
-  //       }));
-  //       commentList = resCommentList;
-  //     })
-  //     .catch((err) => console.log("callPost() ERROR : ", err));
-
-  //   return commentList;
-  // };
 
   const getViewedPost = () => {
     let localStorageViewedPost;
     try {
       localStorageViewedPost = JSON.parse(localStorage.getItem("viewedPost"));
     } catch {
-      setIsSecertMode(true);
+      // setIsSecretMode(true);
+      console.log("getViewedPost() ERROR : ");
     }
-    if (!isSecertMode && localStorageViewedPost) {
+    if (!isSecretMode && localStorageViewedPost) {
       setViewedPost(localStorageViewedPost.reverse());
     }
   };
@@ -107,63 +87,113 @@ function App() {
   };
 
   const handleToggleLogin = (login) => {
-    setIsLogin(login);
+    if (login) {
+      setIsLogin(login);
+    } else {
+      setIsLogin(login);
+      setId("");
+      setRole("");
+      deleteToken();
+    }
+  };
+
+  const setId = (id) => {
+    setUserId(id);
+  };
+
+  const setRole = (role) => {
+    setUserRole(role);
   };
 
   const setToken = (token) => {
-    setIsLogin(true);
+    setTokenToLocalStorage(token);
     setAccessToken(token);
-    try {
-      localStorage.setItem("accessToken", token);
-    } catch {
-      setIsSecertMode(true);
-    }
+    const parseAccessToken = parseJwt(token);
+    handleToggleLogin(true);
+    setId(parseAccessToken.sub);
+    setRole(parseAccessToken.auth);
   };
 
   const deleteToken = () => {
-    setIsLogin(false);
     setAccessToken("");
+    deleteTokenFromLocalStorage();
+  };
+
+  const setTokenToLocalStorage = (token) => {
     try {
-      localStorage.removeItem("accessToken");
+      localStorage.setItem("accessToken", token);
     } catch {
-      setIsSecertMode(true);
+      console.log("setTokenToLocalStorage() ERROR : ");
     }
   };
 
-  const getToken = () => {
+  const getTokenFromLocalStorage = () => {
     let localStorageAccessToken;
     try {
       localStorageAccessToken = localStorage.getItem("accessToken");
     } catch {
-      setIsSecertMode(true);
+      console.log("getTokenFromLocalStorage() ERROR : ");
+      // setIsSecretMode(true);
     }
-    if (!isSecertMode && localStorageAccessToken) {
+    if (!isSecretMode && localStorageAccessToken) {
       setAccessToken(localStorageAccessToken);
       setIsLogin(true);
     }
   };
 
-  const secertModeTest = () => {
+  const deleteTokenFromLocalStorage = () => {
     try {
-      localStorage.setItem("secertModeTest", secertModeTest);
-      localStorage.removeItem("secertModeTest");
+      localStorage.removeItem("accessToken");
+      alert("로그아웃이 완료되었습니다.");
     } catch {
-      setIsSecertMode(true);
+      alert("로그아웃 중 오류가 발생하였습니다.");
+      console.log("deleteTokenFromLocalStorage() ERROR : ");
+      // setIsSecretMode(true);
     }
   };
 
+  const secretModeTest = () => {
+    try {
+      localStorage.setItem("secretModeTest", "secretModeTest");
+      localStorage.removeItem("secretModeTest");
+    } catch {
+      // setIsSecretMode(true);
+    }
+  };
+
+  const parseJwt = (token) => {
+    var base64Url = token.split(".")[1];
+    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    var jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+
+    return JSON.parse(jsonPayload);
+  };
+
   useEffect(() => {
-    secertModeTest();
+    // secretModeTest();
     callPost();
     callCategories();
     getViewedPost();
-    // getToken();
   }, []);
 
   useEffect(() => {
-    console.log("accessToken : ", accessToken);
-    console.log("isLogin : ", isLogin);
-  }, [accessToken, isLogin]);
+    if (!isSecretMode) {
+      getTokenFromLocalStorage();
+    }
+  }, [isSecretMode]);
+
+  useEffect(() => {
+    if (accessToken) console.log("accessToken : ", accessToken);
+    if (isLogin) console.log("isLogin : ", isLogin);
+    console.log("시크릿모드 : ", isSecretMode);
+  }, [accessToken, isLogin, isSecretMode]);
 
   return (
     <PostStateContext.Provider
@@ -173,9 +203,11 @@ function App() {
         viewedPost,
         selectedCategoryId,
         postListLength,
-        isSecertMode,
+        isSecretMode,
         isLogin,
         accessToken,
+        userId,
+        userRole,
       }}
     >
       <PostDispatchContext.Provider
@@ -188,6 +220,8 @@ function App() {
           handleToggleLogin,
           setToken,
           deleteToken,
+          setId,
+          setRole,
         }}
       >
         <BrowserRouter>

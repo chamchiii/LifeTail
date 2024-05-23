@@ -58,7 +58,7 @@ const CommentEditor = ({ postId, callComment }) => {
         alert("댓글을 저장했습니다!!!");
       })
       .catch((err) => {
-        console.log("handleClickSubmit() ERROR : ", err);
+        console.log("handleClickSubmit() ERROR : ");
         alert("오류가 발생하였습니다.");
       });
   };

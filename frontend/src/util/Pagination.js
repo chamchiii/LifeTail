@@ -22,10 +22,6 @@ const Pagination = ({
     setCurrentPage(currentPage - 1);
   };
 
-  //   if (totalPages === 1) {
-  //     return null;
-  //   }
-
   return (
     <div className="Pagination">
       <button

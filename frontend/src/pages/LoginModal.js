@@ -8,11 +8,15 @@ import { ReactComponent as LoginPW } from "../assets/icons/loginPassword.svg";
 import axios from "axios";
 
 const LoginModal = ({ loginModalOpen }) => {
-  const { handleToggleLoginModal, handleToggleLogin, setToken } =
-    useContext(PostDispatchContext);
+  const { handleToggleLoginModal, setToken } = useContext(PostDispatchContext);
 
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    setUserName("");
+    setPassword("");
+  }, [loginModalOpen]);
 
   const handleUserNameChange = (e) => {
     setUserName(e.target.value);
@@ -21,12 +25,6 @@ const LoginModal = ({ loginModalOpen }) => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   handleToggleLogin(true);
-  //   handleToggleLoginModal(false);
-  // };
 
   const handleSignUpSubmit = async (e) => {
     if (
@@ -42,11 +40,12 @@ const LoginModal = ({ loginModalOpen }) => {
         password: password,
       })
       .then((res) => {
+        alert("회원가입이 완료되었습니다. 지금부터 로그인 가능합니다!!!");
         console.log("회원가입이 완료되었습니다!!!");
+        setUserName("");
+        setPassword("");
       })
-      .catch((err) => console.log("handleSignUpSubmit() ERROR : ", err));
-    setUserName("");
-    setPassword("");
+      .catch((err) => console.log("handleSignUpSubmit() ERROR : "));
   };
 
   const handleLoginSubmit = async (e) => {
@@ -57,28 +56,16 @@ const LoginModal = ({ loginModalOpen }) => {
         password: password,
       })
       .then((res) => {
-        console.log("로그인 응답 : ", parseJwt(res.data.accessToken));
         setToken(res.data.accessToken);
         handleToggleLoginModal();
+        setUserName("");
+        setPassword("");
       })
-      .catch((err) => console.log("handleLoginSubmit() ERROR : ", err));
-    setUserName("");
-    setPassword("");
-  };
-
-  const parseJwt = (token) => {
-    var base64Url = token.split(".")[1];
-    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    var jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join("")
-    );
-
-    return JSON.parse(jsonPayload);
+      .catch((err) => {
+        console.log("handleLoginSubmit() ERROR : ");
+        if (parseInt(err.response.status) === 401)
+          alert("비밀번호 오류 또는 등록되어 있지 않은 아이디입니다.");
+      });
   };
 
   const handleClickBackBtn = () => {
@@ -97,7 +84,7 @@ const LoginModal = ({ loginModalOpen }) => {
     },
     content: {
       width: "400px",
-      height: "500px",
+      height: "520px",
       zIndex: "150",
       position: "absolute",
       top: "50%",
@@ -156,10 +143,18 @@ const LoginModal = ({ loginModalOpen }) => {
               />
             </div>
             <div className="login_signup_btn_area">
-              <button className="signup_btn" onClick={handleSignUpSubmit}>
+              <button
+                className="signup_btn"
+                onClick={handleSignUpSubmit}
+                type="button"
+              >
                 회원가입
               </button>
-              <button className="login_btn" onClick={handleLoginSubmit}>
+              <button
+                className="login_btn"
+                onClick={handleLoginSubmit}
+                type="submit"
+              >
                 로그인
               </button>
             </div>
@@ -171,20 +166,24 @@ const LoginModal = ({ loginModalOpen }) => {
             <br />
             <ol>
               <li>
-                회원가입 버튼을 누를 시 작성한 아이디가 등록되어 있지 않다면
-                회원가입이 진행됩니다.
+                아이디 및 비밀번호 작성 후 회원가입 버튼을 누를 시 아이디가
+                등록되어 있지 않다면 회원가입이 진행됩니다.
               </li>
-              <li>아이디와 비밀번호에 별도로 제한하고 있는 규칙은 없습니다.</li>
+              <li>
+                아이디와 비밀번호 생성 규칙은 영어, 한글, 숫자를 사용한 4글자
+                이상 아무 문자입니다.
+              </li>
+              <li>
+                댓글은 로그인을 하지 않아도 작성하실 수 있습니다. 로그인 후 댓글
+                작성 시 로그인된 아이디로 작성됩니다.
+              </li>
               <li>
                 <span className="highlight">
-                  개인 프로젝트 입니다. 절대 개인정보가 포함되지 않고 사용하지
-                  않는 아이디 및 비밀번호를 사용해 주세요. <br />
+                  개인 프로젝트입니다. 암호화 후 비밀번호를 저장하고 있지만
+                  그래도 절대 개인정보가 포함되지 않고 사용하지 않는 아이디 및
+                  비밀번호를 사용해 주세요. <br />
                 </span>
                 <span className="example">예) qwer / 1234, 구경꾼1 / asdf</span>
-              </li>
-              <li>
-                댓글은 로그인을 하지 않아도 작성할 수 있습니다. 회원가입은 굳이
-                하지 않으셔도 됩니다.
               </li>
             </ol>
           </div>
