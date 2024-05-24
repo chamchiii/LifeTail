@@ -345,14 +345,23 @@ textarea::placeholder {
   margin-bottom: 5px;
 }
 .LeftMenu .leftmenu_category .category_main {
-  width: 100%;
+  width: 140px;
+  height: 30px;
 
   font-size: large;
   font-weight: 500;
 
-  padding: 10px 5px 10px 5px;
+  padding: 5px 5px 10px 5px;
   border-bottom: 1px solid var(--light-bg-300);
   margin-bottom: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.LeftMenu .leftmenu_category .category_main .category_add {
+  font-weight: 700;
+  font-size: 22px;
 }
 .LeftMenu .leftmenu_category .categories {
   box-sizing: border-box;
@@ -360,9 +369,9 @@ textarea::placeholder {
   padding: 3px 5px 3px 5px;
 
   font-size: small;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 
   cursor: pointer;
 }
@@ -494,13 +503,14 @@ textarea::placeholder {
   text-overflow: ellipsis;
 }
 .RightMenu .recently_view {
-  width: 100%;
+  width: 140px;
+  height: 30px;
+
   font-size: large;
   font-weight: 500;
 
-  padding: 10px 5px 10px 5px;
+  padding: 5px 5px 10px 5px;
   border-bottom: 1px solid var(--light-bg-300);
-  margin-top: 5px;
   margin-bottom: 10px;
 }
 .RightMenu .recently_view_title {

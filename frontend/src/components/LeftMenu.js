@@ -32,7 +32,12 @@ const LeftMenu = () => {
   return (
     <aside className="LeftMenu">
       <div className="leftmenu_category">
-        <div className="category_main">category</div>
+        <div className="category_main">
+          <div>category</div>
+          <div>
+            <sapn className="category_add">+</sapn>
+          </div>
+        </div>
         <ul>
           <li
             className={`categories${
