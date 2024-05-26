@@ -1,6 +1,8 @@
 import { PostStateContext, PostDispatchContext } from "../App";
 import { useContext, useEffect, useState } from "react";
 
+import { ReactComponent as Plus } from "../assets/icons/add.svg";
+
 const LeftMenu = () => {
   const { category, postListLength } = useContext(PostStateContext);
   const { changeCategoryId } = useContext(PostDispatchContext);
@@ -29,13 +31,17 @@ const LeftMenu = () => {
     setSelectedCategoryId(categoryId === selectedCategoryId ? -1 : categoryId);
   };
 
+  const handleClickPlus = () => {
+
+  }
+
   return (
     <aside className="LeftMenu">
       <div className="leftmenu_category">
         <div className="category_main">
           <div>category</div>
-          <div>
-            <sapn className="category_add">+</sapn>
+          <div className="category_plus_wrapper">
+            <Plus stroke="var(--light-text-200)" onClick={handleClickPlus}/>
           </div>
         </div>
         <ul>

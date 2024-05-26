@@ -9,7 +9,8 @@ import PostPage from "./pages/PostPage";
 import Edit from "./pages/Edit";
 import { dateToStringYMD } from "./util/DateUtill";
 import Search from "./pages/Search";
-import LoginModal from "./pages/LoginModal";
+import LoginModal from "./components/LoginModal";
+
 
 export const PostStateContext = React.createContext();
 export const PostDispatchContext = React.createContext();
@@ -26,6 +27,7 @@ function App() {
   const [accessToken, setAccessToken] = useState("");
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
+  const [categoryPlusModal, setCategoryPlusModal] = useState(false);
 
   const callPost = async () => {
     await axios
@@ -162,9 +164,9 @@ function App() {
   };
 
   const parseJwt = (token) => {
-    var base64Url = token.split(".")[1];
-    var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    var jsonPayload = decodeURIComponent(
+    let base64Url = token.split(".")[1];
+    let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    let jsonPayload = decodeURIComponent(
       atob(base64)
         .split("")
         .map(function (c) {
@@ -175,6 +177,10 @@ function App() {
 
     return JSON.parse(jsonPayload);
   };
+
+  const handleToggleCategoryPlusModal = () => {
+    setCategoryPlusModal(!categoryPlusModal);
+  }
 
   useEffect(() => {
     // secretModeTest();
@@ -222,6 +228,7 @@ function App() {
           deleteToken,
           setId,
           setRole,
+          handleToggleCategoryPlusModal,
         }}
       >
         <BrowserRouter>

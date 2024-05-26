@@ -359,6 +359,13 @@ textarea::placeholder {
   justify-content: space-between;
   align-items: center;
 }
+.LeftMenu .leftmenu_category .category_main .category_plus_wrapper {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .LeftMenu .leftmenu_category .category_main .category_add {
   font-weight: 700;
   font-size: 22px;
