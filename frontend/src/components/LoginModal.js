@@ -41,7 +41,6 @@ const LoginModal = ({ loginModalOpen }) => {
       })
       .then((res) => {
         alert("회원가입이 완료되었습니다. 지금부터 로그인 가능합니다!!!");
-        console.log("회원가입이 완료되었습니다!!!");
         setUserName("");
         setPassword("");
       })

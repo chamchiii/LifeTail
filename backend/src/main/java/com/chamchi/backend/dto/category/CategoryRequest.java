@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CategoryRequest {
-    private Long id;
+    private Integer id;
     private String name;
+    private Integer turn;
 }

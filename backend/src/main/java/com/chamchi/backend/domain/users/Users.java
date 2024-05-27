@@ -17,7 +17,7 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
-    private Long id = null;     //유저번호 - sequence
+    private Integer id = null;     //유저번호 - sequence
     private String name;
     private String userId;      // 유저아이디
     private String password;
@@ -27,7 +27,7 @@ public class Users {
     private Role role;
 
     @Builder
-    public Users(Long id, String name, String userId, String password, String email, Role role/*, String provider*/) {
+    public Users(Integer id, String name, String userId, String password, String email, Role role/*, String provider*/) {
         this.id = id;
         this.name = name;
         this.userId = userId;

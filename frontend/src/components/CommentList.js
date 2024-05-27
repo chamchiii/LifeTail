@@ -23,10 +23,6 @@ const CommentList = ({ postId, commentList, callComment }) => {
     }
   }, [comments, currentPage, countPerPage]);
 
-  useEffect(() => {
-    console.log("현재페이지: ", currentPage);
-  }, [currentPage]);
-
   return (
     <div className="CommentList">
       {sliceComments.length > 0 ? (

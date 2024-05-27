@@ -10,7 +10,7 @@ import Edit from "./pages/Edit";
 import { dateToStringYMD } from "./util/DateUtill";
 import Search from "./pages/Search";
 import LoginModal from "./components/LoginModal";
-
+import CategoryPlusModal from "./components/CategoryPlusModal";
 
 export const PostStateContext = React.createContext();
 export const PostDispatchContext = React.createContext();
@@ -33,7 +33,6 @@ function App() {
     await axios
       .get("/api/post")
       .then((res) => {
-        console.log("res.data : ", res.data);
         const resMap = res.data.map((it) => {
           return {
             id: it.id,
@@ -50,7 +49,7 @@ function App() {
         setPost(resMap);
         setPostListLength(resMap.length);
       })
-      .catch((err) => console.log("page open error - call all post list"));
+      .catch((err) => console.log("callPost() ERROR : "));
   };
 
   const callCategories = async () => {
@@ -61,6 +60,7 @@ function App() {
           id: it.id,
           name: it.name,
           count: it.count,
+          turn: it.turn,
         }));
         setCategory(responseToMap);
       })
@@ -139,7 +139,10 @@ function App() {
     }
     if (!isSecretMode && localStorageAccessToken) {
       setAccessToken(localStorageAccessToken);
-      setIsLogin(true);
+      const parseAccessToken = parseJwt(localStorageAccessToken);
+      handleToggleLogin(true);
+      setId(parseAccessToken.sub);
+      setRole(parseAccessToken.auth);
     }
   };
 
@@ -180,13 +183,16 @@ function App() {
 
   const handleToggleCategoryPlusModal = () => {
     setCategoryPlusModal(!categoryPlusModal);
-  }
+  };
 
   useEffect(() => {
     // secretModeTest();
     callPost();
     callCategories();
     getViewedPost();
+    if (!isSecretMode) {
+      getTokenFromLocalStorage();
+    }
   }, []);
 
   useEffect(() => {
@@ -196,10 +202,8 @@ function App() {
   }, [isSecretMode]);
 
   useEffect(() => {
-    if (accessToken) console.log("accessToken : ", accessToken);
-    if (isLogin) console.log("isLogin : ", isLogin);
-    console.log("시크릿모드 : ", isSecretMode);
-  }, [accessToken, isLogin, isSecretMode]);
+    console.log("categoryPlusModal : ", categoryPlusModal);
+  }, [categoryPlusModal]);
 
   return (
     <PostStateContext.Provider
@@ -246,6 +250,7 @@ function App() {
               </Routes>
             </main>
             <LoginModal loginModalOpen={loginModalOpen} />
+            <CategoryPlusModal categoryPlusModal={categoryPlusModal} />
           </div>
         </BrowserRouter>
       </PostDispatchContext.Provider>

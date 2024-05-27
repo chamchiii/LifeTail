@@ -22,7 +22,7 @@ public class CommentService {
     }
 
     public List<CommentResponse> getCommentByPostId(String postId) {
-        List<CommentResponse> list = commentRepository.findByPostIdAndIsDeleted(Long.parseLong(postId), "N")
+        List<CommentResponse> list = commentRepository.findByPostIdAndIsDeleted(Integer.parseInt(postId), "N")
                 .orElseThrow(IllegalArgumentException::new)
                 .stream().map(CommentResponse::new).toList();
 
@@ -37,7 +37,7 @@ public class CommentService {
     }
 
     public void deleteComment(String commentId){
-        Comment comment = commentRepository.findById(Long.parseLong(commentId)).orElseThrow(IllegalArgumentException::new);
+        Comment comment = commentRepository.findById(Integer.parseInt(commentId)).orElseThrow(IllegalArgumentException::new);
         comment.setIsDeleted("Y");
         comment.setDeleteDt(new Date());
         commentRepository.save(comment);

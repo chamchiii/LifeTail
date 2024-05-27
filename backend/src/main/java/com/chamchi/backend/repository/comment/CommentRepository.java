@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
-    Optional<List<Comment>> findByPostIdAndIsDeleted(Long postId, String isDelete);
+public interface CommentRepository extends JpaRepository<Comment, Integer> {
+    Optional<List<Comment>> findByPostIdAndIsDeleted(Integer postId, String isDelete);
 
-    Optional<Comment> findById(Long id);
+    Optional<Comment> findById(Integer id);
 }

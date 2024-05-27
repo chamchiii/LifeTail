@@ -1,5 +1,7 @@
 package com.chamchi.backend.service.category;
 
+import com.chamchi.backend.domain.category.Category;
+import com.chamchi.backend.dto.category.CategoryRequest;
 import com.chamchi.backend.dto.category.CategoryResponse;
 import com.chamchi.backend.repository.category.CategoryCountRepository;
 import com.chamchi.backend.repository.category.CategoryRepository;
@@ -20,17 +22,13 @@ public class CategoryService {
     private final CategoryCountRepository categoryCountRepository;
 
     public List<CategoryResponse> getCategories() {
-//        List<CategoryResponse> optionalList = categoryCountRepository.findAllCategoryWithCount()
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .map(objects -> new CategoryResponse((Long) objects[0], (String) objects[1], (Long) objects[2]))
-//                .toList();
         List<CategoryResponse> categoryResponseList = categoryRepository.findAllCategoryWithCount()
                 .orElse(Collections.emptyList())
                 .stream()
-                .map(objects -> new CategoryResponse((Long) objects[0], (String) objects[1], (Long) objects[2]))
+                .map(objects ->
+                        new CategoryResponse(Integer.parseInt(String.valueOf(objects[0])), String.valueOf(objects[1]), Integer.parseInt(String.valueOf(objects[2])), Integer.parseInt(String.valueOf(objects[3]))))
                 .toList();
-
+        System.out.println("사이즈" + categoryResponseList.size());
         return categoryResponseList;
     }
 }

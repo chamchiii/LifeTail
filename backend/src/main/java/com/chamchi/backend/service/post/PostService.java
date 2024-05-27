@@ -63,11 +63,11 @@ public class PostService {
 
     @Transactional
     public void deletePost(String id){
-        Post post = postRepository.findByIdAndIsDeleted(Long.parseLong(id), "N");
+        Post post = postRepository.findByIdAndIsDeleted(Integer.parseInt(id), "N");
         post.setIsDeleted("Y");
         post.setDeletedDate(new Date());
         postRepository.save(post);
-//        postRepository.deleteById(Long.parseLong(id));
+//        postRepository.deleteById(Integer.parseInt(id));
     }
 
     @Transactional(readOnly = true)

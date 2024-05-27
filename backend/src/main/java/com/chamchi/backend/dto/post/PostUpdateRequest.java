@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PostUpdateRequest {
-    private Long userId;
+    private Integer userId;
 
-    private Long id;
+    private Integer id;
 
     private String title;
 
@@ -18,9 +18,9 @@ public class PostUpdateRequest {
 
     private String content;
 
-    private Long categoryId;
+    private Integer categoryId;
 
-    public PostUpdateRequest(Long userId, Long id, String title, String subtitle, String content, Long categoryId) {
+    public PostUpdateRequest(Integer userId, Integer id, String title, String subtitle, String content, Integer categoryId) {
         this.userId = userId;
         this.id = id;
         this.title = title;

@@ -18,7 +18,7 @@ public class ImageTemp {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_temp_id_seq")
     @SequenceGenerator(name = "image_temp_id_seq", sequenceName = "image_temp_id_seq", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
     private String originName;
 

@@ -27,7 +27,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_id_seq")
     @SequenceGenerator(name = "post_id_seq", sequenceName = "post_id_seq", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
     private String title;
 
@@ -51,11 +51,11 @@ public class Post {
     @JoinColumn(name = "users_id")
     private Users users;
 
-    public Post(Long id){
+    public Post(Integer id){
         this.id = id;
     }
 
-    public Post(Long id, String title,String subtitle, String content, Category category, Users users, Date date) {
+    public Post(Integer id, String title,String subtitle, String content, Category category, Users users, Date date) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;

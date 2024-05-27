@@ -61,7 +61,6 @@ const PostPage = () => {
   }, [id, post, isSecretMode]);
 
   const callComment = async (postId) => {
-    console.log("callComment() 실행");
     await axios
       .get(`/api/comment/${postId}`)
       .then((res) => {

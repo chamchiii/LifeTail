@@ -17,9 +17,9 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_id_seq")
     @SequenceGenerator(name = "image_id_seq", sequenceName = "image_id_seq", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
-    private Long postId;
+    private Integer postId;
     //UUID가 적용되지 않은 name
     private String originName;
 
@@ -31,7 +31,7 @@ public class Image {
 
     private String idDeleted;
 
-    public Image(Long postId, String originName, String imageName, String path, String extension) {
+    public Image(Integer postId, String originName, String imageName, String path, String extension) {
         this.postId = postId;
         this.originName = originName;
         this.imageName = imageName;
@@ -39,7 +39,7 @@ public class Image {
         this.extension = extension;
     }
 
-    public Image(Long postId, ImageTemp imageTemp, String path){
+    public Image(Integer postId, ImageTemp imageTemp, String path){
         this.postId = postId;
         this.originName = imageTemp.getOriginName();
         this.imageName = imageTemp.getImageName();

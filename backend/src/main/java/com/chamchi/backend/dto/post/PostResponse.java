@@ -16,7 +16,7 @@ import java.util.List;
 public class PostResponse {
 
     //글 번호(sequence)
-    private Long id;
+    private Integer id;
 
     private String title;
 
@@ -30,7 +30,7 @@ public class PostResponse {
 
     private Users users;
 
-    public PostResponse(Long id, String title, String subtitle, String content, Date createdDate, Category category, Users users) {
+    public PostResponse(Integer id, String title, String subtitle, String content, Date createdDate, Category category, Users users) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;

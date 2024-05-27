@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 public class CommentUpdateRequest {
-    private Long id;
+    private Integer id;
     private String content;
     private Date updateDt = new Date();
 }

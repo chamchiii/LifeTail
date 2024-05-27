@@ -15,8 +15,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentResponse {
-    private Long id;
-    private Long postId;
+    private Integer id;
+    private Integer postId;
     private String writer;
     private String password;
     private String content;

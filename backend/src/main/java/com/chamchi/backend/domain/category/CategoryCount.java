@@ -14,11 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategoryCount {
     @Id
-    private Long id;
+    private Integer id;
     private String name;
-    private Long count;
+    private Integer count;
 
-    public CategoryCount(Long id, String name, Long count) {
+    public CategoryCount(Integer id, String name, Integer count) {
         this.id = id;
         this.name = name;
         this.count = count;

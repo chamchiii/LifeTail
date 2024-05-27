@@ -5,7 +5,8 @@ import { ReactComponent as Plus } from "../assets/icons/add.svg";
 
 const LeftMenu = () => {
   const { category, postListLength } = useContext(PostStateContext);
-  const { changeCategoryId } = useContext(PostDispatchContext);
+  const { changeCategoryId, handleToggleCategoryPlusModal } =
+    useContext(PostDispatchContext);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(-1);
@@ -32,8 +33,8 @@ const LeftMenu = () => {
   };
 
   const handleClickPlus = () => {
-
-  }
+    handleToggleCategoryPlusModal();
+  };
 
   return (
     <aside className="LeftMenu">
@@ -41,7 +42,7 @@ const LeftMenu = () => {
         <div className="category_main">
           <div>category</div>
           <div className="category_plus_wrapper">
-            <Plus stroke="var(--light-text-200)" onClick={handleClickPlus}/>
+            <Plus stroke="var(--light-text-200)" onClick={handleClickPlus} />
           </div>
         </div>
         <ul>

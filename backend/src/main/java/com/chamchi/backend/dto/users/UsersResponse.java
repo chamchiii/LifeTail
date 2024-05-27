@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UsersResponse {
-    private Long id;
+    private Integer id;
     private String name;
     private String userId;
     private String email;
@@ -18,7 +18,7 @@ public class UsersResponse {
 //    @Enumerated(EnumType.STRING)
 //    private Role role;
 
-    public UsersResponse(Long id, String name, String userId, String email/*, Provider provider, Role role*/) {
+    public UsersResponse(Integer id, String name, String userId, String email/*, Provider provider, Role role*/) {
         this.id = id;
         this.name = name;
         this.userId = userId;
