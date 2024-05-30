@@ -18,7 +18,7 @@ export const PostDispatchContext = React.createContext();
 function App() {
   const [post, setPost] = useState([]);
   const [postListLength, setPostListLength] = useState(0);
-  const [category, setCategory] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
   const [viewedPost, setViewedPost] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(-1);
   const [isSecretMode, setIsSecretMode] = useState(false);
@@ -28,6 +28,7 @@ function App() {
   const [userRole, setUserRole] = useState("");
   const [userId, setUserId] = useState("");
   const [categoryPlusModal, setCategoryPlusModal] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   const callPost = async () => {
     await axios
@@ -59,10 +60,12 @@ function App() {
         const responseToMap = res.data.map((it) => ({
           id: it.id,
           name: it.name,
-          count: it.count,
           turn: it.turn,
+          isDeleted: it.isDeleted,
+          count: it.count,
+          isNew: false,
         }));
-        setCategory(responseToMap);
+        setCategoryList(responseToMap);
       })
       .catch((err) => console.log("callCategories() ERROR : "));
   };
@@ -157,14 +160,14 @@ function App() {
     }
   };
 
-  const secretModeTest = () => {
-    try {
-      localStorage.setItem("secretModeTest", "secretModeTest");
-      localStorage.removeItem("secretModeTest");
-    } catch {
-      // setIsSecretMode(true);
-    }
-  };
+  // const secretModeTest = () => {
+  //   try {
+  //     localStorage.setItem("secretModeTest", "secretModeTest");
+  //     localStorage.removeItem("secretModeTest");
+  //   } catch {
+  //     // setIsSecretMode(true);
+  //   }
+  // };
 
   const parseJwt = (token) => {
     let base64Url = token.split(".")[1];
@@ -185,14 +188,37 @@ function App() {
     setCategoryPlusModal(!categoryPlusModal);
   };
 
+  const preventScroll = () => {
+    const currentScrollY = window.scrollY;
+    setScrollY(currentScrollY);
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${currentScrollY}px`;
+    document.body.style.overflowY = "scroll";
+    return currentScrollY;
+  };
+
+  const allowScroll = (prevScrollY) => {
+    document.body.style.position = "";
+    document.body.style.width = "";
+    document.body.style.top = "";
+    document.body.style.overflowY = "";
+    window.scrollTo(0, prevScrollY);
+  };
+
+  useEffect(() => {
+    if (categoryPlusModal) {
+      preventScroll();
+    } else {
+      allowScroll(scrollY);
+    }
+  }, [categoryPlusModal]);
+
   useEffect(() => {
     // secretModeTest();
     callPost();
     callCategories();
     getViewedPost();
-    if (!isSecretMode) {
-      getTokenFromLocalStorage();
-    }
   }, []);
 
   useEffect(() => {
@@ -201,15 +227,11 @@ function App() {
     }
   }, [isSecretMode]);
 
-  useEffect(() => {
-    console.log("categoryPlusModal : ", categoryPlusModal);
-  }, [categoryPlusModal]);
-
   return (
     <PostStateContext.Provider
       value={{
         post,
-        category,
+        categoryList,
         viewedPost,
         selectedCategoryId,
         postListLength,
@@ -250,7 +272,10 @@ function App() {
               </Routes>
             </main>
             <LoginModal loginModalOpen={loginModalOpen} />
-            <CategoryPlusModal categoryPlusModal={categoryPlusModal} />
+            <CategoryPlusModal
+              categoryPlusModal={categoryPlusModal}
+              categoryList={categoryList}
+            />
           </div>
         </BrowserRouter>
       </PostDispatchContext.Provider>

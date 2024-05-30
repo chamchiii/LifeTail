@@ -12,9 +12,12 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     @Query(value = "SELECT c.id , c.name , c.turn, COALESCE(n.count, 0) AS count FROM Category c " +
-            "LEFT OUTER JOIN (SELECT p.category AS category_id, count(p.category) AS count FROM post p WHERE p.is_deleted = 'N' GROUP BY p.category) AS n " +
-            "ON c.id = n.category_id ORDER BY c.turn", nativeQuery = true)
+            "LEFT OUTER JOIN (SELECT p.category AS category_id, count(p.category) AS count FROM post p WHERE p.is_deleted = 'N' GROUP BY p.category) AS n ON c.id = n.category_id " +
+            "WHERE c.is_deleted = 'N' " +
+            "ORDER BY c.turn", nativeQuery = true)
     Optional<List<Object[]>> findAllCategoryWithCount();
+
+    Optional<List<Category>> findAllByIsDeletedOrderByTurnAsc(String isDeleted);
 
     Optional<Category> findTopByOrderByTurnAsc();
 }

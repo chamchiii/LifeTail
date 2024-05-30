@@ -15,5 +15,6 @@ public class CategoryResponse {
     private Integer id;
     private String name;
     private Integer turn;
+    private String isDeleted;
     private Integer count;
 }

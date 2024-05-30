@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/post").hasAuthority(Role.ADMIN.getValue())
                         .requestMatchers(HttpMethod.POST, "/api/post/image").hasAuthority(Role.ADMIN.getValue())
                         .requestMatchers(HttpMethod.DELETE, "/api/post/**").hasAuthority(Role.ADMIN.getValue())
+                        .requestMatchers(HttpMethod.POST, "/api/category").hasAuthority(Role.ADMIN.getValue())
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)

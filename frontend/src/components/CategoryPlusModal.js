@@ -1,9 +1,72 @@
+import { useState, useEffect, useContext } from "react";
+import { PostDispatchContext, PostStateContext } from "../App";
 import Modal from "react-modal";
-import { PostDispatchContext } from "../App";
-import { useContext } from "react";
+import axios from "axios";
+import CagtegoryList from "./CategoryList";
+import { addToHeader } from "../util/AddHeader";
+import { compareArray } from "../util/CompareObj";
 
-const CategoryPlusModal = ({ categoryPlusModal }) => {
+const CategoryPlusModal = ({ categoryPlusModal, categoryList }) => {
   const { handleToggleCategoryPlusModal } = useContext(PostDispatchContext);
+  const { accessToken } = useContext(PostStateContext);
+
+  const [categories, setCategories] = useState([]);
+  const [isModify, setIsModify] = useState(false);
+
+  useEffect(() => {
+    if (categoryList) {
+      setCategories(categoryList);
+    }
+  }, [categoryList]);
+
+  useEffect(() => {
+    if (!categoryPlusModal) {
+      setCategories(categoryList);
+      setIsModify(false);
+    }
+  }, [categoryPlusModal]);
+
+  useEffect(() => {
+    if (categories) {
+      console.log("모달 categories : ", categories);
+    }
+  }, [categories]);
+
+  const modifyCategories = (categories) => {
+    setIsModify(true);
+    setCategories(categories);
+  };
+
+  const handleClickCancle = () => {
+    handleToggleCategoryPlusModal();
+  };
+
+  const handleToggleIsModify = (bool) => {
+    setIsModify(bool);
+  };
+
+  const handleClickSave = async () => {
+    if (!isModify) {
+      alert("변경된 점이 없습니다.");
+      return;
+    }
+    const isEqualArray = compareArray(categoryList, categories);
+    if (isEqualArray) {
+      alert("변경된 점이 없습니다.");
+      return;
+    }
+    const saveCategoyList = categories.map((it) =>
+      it.isNew ? { ...it, id: "" } : it
+    );
+    let headers;
+    if (accessToken) {
+      headers = addToHeader(accessToken);
+    }
+    await axios
+      .post("/api/category", saveCategoyList, { headers })
+      .then((res) => handleToggleCategoryPlusModal())
+      .catch((err) => console.log("handleClickSave() ERROR : "));
+  };
 
   const customModalStyles = {
     overlay: {
@@ -26,7 +89,6 @@ const CategoryPlusModal = ({ categoryPlusModal }) => {
       borderRadius: "10px",
       boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
       backgroundColor: "var(--light-bg-100)",
-      overflow: "hidden",
       display: "flex",
       flexDirection: "column",
       // justifyContent: "center",
@@ -39,12 +101,34 @@ const CategoryPlusModal = ({ categoryPlusModal }) => {
   };
 
   return (
-    <div className="CategoryPlus">
+    <div className="CategoryPlusModal">
       <Modal
+        className="categoryPlusModal"
         isOpen={categoryPlusModal}
         onRequestClose={handleToggleCategoryPlusModal}
         style={customModalStyles}
-      ></Modal>
+      >
+        <h2 className="categoryPlusModal_h2">카테고리 수정/추가</h2>
+        <CagtegoryList
+          categoryList={categories}
+          modifyCategories={modifyCategories}
+          handleToggleIsModify={handleToggleIsModify}
+        />
+        <div className="categoryPlusModal_button_area">
+          <button
+            className="categoryPlusModal_button_cancle"
+            onClick={handleClickCancle}
+          >
+            취소
+          </button>
+          <button
+            className="categoryPlusModal_button_save"
+            onClick={handleClickSave}
+          >
+            저장
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
