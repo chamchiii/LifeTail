@@ -7,7 +7,8 @@ import { addToHeader } from "../util/AddHeader";
 import { compareArray } from "../util/CompareObj";
 
 const CategoryPlusModal = ({ categoryPlusModal, categoryList }) => {
-  const { handleToggleCategoryPlusModal } = useContext(PostDispatchContext);
+  const { handleToggleCategoryPlusModal, callCategories } =
+    useContext(PostDispatchContext);
   const { accessToken } = useContext(PostStateContext);
 
   const [categories, setCategories] = useState([]);
@@ -26,14 +27,8 @@ const CategoryPlusModal = ({ categoryPlusModal, categoryList }) => {
     }
   }, [categoryPlusModal]);
 
-  useEffect(() => {
-    if (categories) {
-      console.log("모달 categories : ", categories);
-    }
-  }, [categories]);
-
   const modifyCategories = (categories) => {
-    setIsModify(true);
+    handleToggleIsModify(true);
     setCategories(categories);
   };
 
@@ -64,7 +59,10 @@ const CategoryPlusModal = ({ categoryPlusModal, categoryList }) => {
     }
     await axios
       .post("/api/category", saveCategoyList, { headers })
-      .then((res) => handleToggleCategoryPlusModal())
+      .then((res) => {
+        handleToggleCategoryPlusModal();
+        callCategories();
+      })
       .catch((err) => console.log("handleClickSave() ERROR : "));
   };
 
@@ -112,7 +110,6 @@ const CategoryPlusModal = ({ categoryPlusModal, categoryList }) => {
         <CagtegoryList
           categoryList={categories}
           modifyCategories={modifyCategories}
-          handleToggleIsModify={handleToggleIsModify}
         />
         <div className="categoryPlusModal_button_area">
           <button

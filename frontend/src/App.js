@@ -153,7 +153,8 @@ function App() {
       localStorageAccessToken = localStorage.getItem("accessToken");
 
       if (localStorageAccessToken && localStorageAccessToken.length > 0) {
-        parsedToken = parseJwt(decrypt(localStorageAccessToken));
+        localStorageAccessToken = decrypt(localStorageAccessToken);
+        parsedToken = parseJwt(localStorageAccessToken);
         tokenExpireDay = new Date(parsedToken.exp * 1000);
         if (now >= tokenExpireDay) {
           alert("자동 로그인 기간이 만료되었습니다. 다시 로그인 부탁드립니다.");

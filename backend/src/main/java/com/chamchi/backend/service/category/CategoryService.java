@@ -31,7 +31,6 @@ public class CategoryService {
                 .map(objects ->
                         new CategoryResponse(Integer.parseInt(String.valueOf(objects[0])), String.valueOf(objects[1]), Integer.parseInt(String.valueOf(objects[2])),"N" ,Integer.parseInt(String.valueOf(objects[3]))))
                 .toList();
-        System.out.println("사이즈" + categoryResponseList.size());
         return categoryResponseList;
     }
 

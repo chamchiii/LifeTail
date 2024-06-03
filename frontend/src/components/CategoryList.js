@@ -5,11 +5,7 @@ import { ReactComponent as Trash } from "../assets/icons/trash.svg";
 import { ReactComponent as TrashX } from "../assets/icons/trashX.svg";
 import { ReactComponent as PlusIcon } from "../assets/icons/plusIcon.svg";
 
-const CagtegoryList = ({
-  categoryList,
-  modifyCategories,
-  handleToggleIsModify,
-}) => {
+const CagtegoryList = ({ categoryList, modifyCategories }) => {
   const [categories, setCategories] = useState([]);
   const [deletedCategories, setDeletedCategories] = useState([]);
   const [minTurn, setMinTurn] = useState(0);
