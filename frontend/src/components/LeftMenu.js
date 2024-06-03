@@ -4,7 +4,8 @@ import { useContext, useEffect, useState } from "react";
 import { ReactComponent as Plus } from "../assets/icons/add.svg";
 
 const LeftMenu = () => {
-  const { categoryList, postListLength } = useContext(PostStateContext);
+  const { categoryList, postListLength, userRole } =
+    useContext(PostStateContext);
   const { changeCategoryId, handleToggleCategoryPlusModal } =
     useContext(PostDispatchContext);
 
@@ -33,6 +34,12 @@ const LeftMenu = () => {
   };
 
   const handleClickPlus = () => {
+    if (userRole !== "ADMIN") {
+      alert(
+        "현재 카테고리 추가/수정 기능은 관리자만 가능하도록 개발하였습니다."
+      );
+      return;
+    }
     handleToggleCategoryPlusModal();
   };
 

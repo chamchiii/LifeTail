@@ -24,9 +24,6 @@ public class CategoryController {
 
     @PostMapping("/api/category")
     public void insertOrUpdate(@RequestBody List<CategoryRequest> requestList) {
-        /*for(CategoryRequest c : requestList){
-            System.out.println(c.toString());
-        }*/
         categoryService.insertOrUpdate(requestList);
     }
 }

@@ -367,11 +367,12 @@ textarea::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  svg {
+    cursor: pointer;
+  }
 }
-.LeftMenu .leftmenu_category .category_main .category_add {
-  font-weight: 700;
-  font-size: 22px;
-}
+
 .LeftMenu .leftmenu_category .categories {
   box-sizing: border-box;
   width: 100%;

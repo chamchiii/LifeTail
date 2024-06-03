@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import Pagination from "../util/Pagination";
 
 const PostsList = ({ isSearch, post }) => {
-  const { selectedCategoryId, isSecretMode } = useContext(PostStateContext);
+  const { selectedCategoryId } = useContext(PostStateContext);
   const [postList, setPostList] = useState([]);
   const [slicePostList, setSlicePostList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,9 +38,7 @@ const PostsList = ({ isSearch, post }) => {
     <div className="PostList">
       <section className="postsList">
         {slicePostList.length > 0 ? (
-          slicePostList.map((it) => (
-            <Post key={it.id} data={it} isSecretMode={isSecretMode}></Post>
-          ))
+          slicePostList.map((it) => <Post key={it.id} data={it}></Post>)
         ) : (
           <div className="no_posts_with_category">
             해당 카테고리에는 글이 없습니다.

@@ -7,10 +7,11 @@ import Home from "./pages/Home";
 import New from "./pages/New";
 import PostPage from "./pages/PostPage";
 import Edit from "./pages/Edit";
-import { dateToStringYMD } from "./util/DateUtill";
 import Search from "./pages/Search";
 import LoginModal from "./components/LoginModal";
 import CategoryPlusModal from "./components/CategoryPlusModal";
+import { dateToStringYMD } from "./util/DateUtill";
+import { encrypt, decrypt } from "./util/Cryp";
 
 export const PostStateContext = React.createContext();
 export const PostDispatchContext = React.createContext();
@@ -21,7 +22,6 @@ function App() {
   const [categoryList, setCategoryList] = useState([]);
   const [viewedPost, setViewedPost] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(-1);
-  const [isSecretMode, setIsSecretMode] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [accessToken, setAccessToken] = useState("");
@@ -75,10 +75,9 @@ function App() {
     try {
       localStorageViewedPost = JSON.parse(localStorage.getItem("viewedPost"));
     } catch {
-      // setIsSecretMode(true);
       console.log("getViewedPost() ERROR : ");
     }
-    if (!isSecretMode && localStorageViewedPost) {
+    if (localStorageViewedPost) {
       setViewedPost(localStorageViewedPost.reverse());
     }
   };
@@ -95,10 +94,15 @@ function App() {
     if (login) {
       setIsLogin(login);
     } else {
-      setIsLogin(login);
-      setId("");
-      setRole("");
-      deleteToken();
+      try {
+        setIsLogin(login);
+        setId("");
+        setRole("");
+        deleteToken();
+        alert("로그아웃이 완료되었습니다.");
+      } catch {
+        alert("로그아웃 시도 중 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -111,7 +115,7 @@ function App() {
   };
 
   const setToken = (token) => {
-    setTokenToLocalStorage(token);
+    setTokenToLocalStorage(encrypt(token));
     setAccessToken(token);
     const parseAccessToken = parseJwt(token);
     handleToggleLogin(true);
@@ -132,42 +136,41 @@ function App() {
     }
   };
 
-  const getTokenFromLocalStorage = () => {
-    let localStorageAccessToken;
-    try {
-      localStorageAccessToken = localStorage.getItem("accessToken");
-    } catch {
-      console.log("getTokenFromLocalStorage() ERROR : ");
-      // setIsSecretMode(true);
-    }
-    if (!isSecretMode && localStorageAccessToken) {
-      setAccessToken(localStorageAccessToken);
-      const parseAccessToken = parseJwt(localStorageAccessToken);
-      handleToggleLogin(true);
-      setId(parseAccessToken.sub);
-      setRole(parseAccessToken.auth);
-    }
-  };
-
   const deleteTokenFromLocalStorage = () => {
     try {
       localStorage.removeItem("accessToken");
-      alert("로그아웃이 완료되었습니다.");
     } catch {
-      alert("로그아웃 중 오류가 발생하였습니다.");
       console.log("deleteTokenFromLocalStorage() ERROR : ");
-      // setIsSecretMode(true);
     }
   };
 
-  // const secretModeTest = () => {
-  //   try {
-  //     localStorage.setItem("secretModeTest", "secretModeTest");
-  //     localStorage.removeItem("secretModeTest");
-  //   } catch {
-  //     // setIsSecretMode(true);
-  //   }
-  // };
+  const autoLogin = () => {
+    let localStorageAccessToken;
+    let parsedToken;
+    let now = new Date();
+    let tokenExpireDay;
+    try {
+      localStorageAccessToken = localStorage.getItem("accessToken");
+
+      if (localStorageAccessToken && localStorageAccessToken.length > 0) {
+        parsedToken = parseJwt(decrypt(localStorageAccessToken));
+        tokenExpireDay = new Date(parsedToken.exp * 1000);
+        if (now >= tokenExpireDay) {
+          alert("자동 로그인 기간이 만료되었습니다. 다시 로그인 부탁드립니다.");
+          deleteToken();
+          return;
+        }
+
+        setAccessToken(localStorageAccessToken);
+        handleToggleLogin(true);
+        setId(parsedToken.sub);
+        setRole(parsedToken.auth);
+      }
+    } catch {
+      deleteTokenFromLocalStorage();
+      console.log("autoLogin() ERROR : ");
+    }
+  };
 
   const parseJwt = (token) => {
     let base64Url = token.split(".")[1];
@@ -215,17 +218,11 @@ function App() {
   }, [categoryPlusModal]);
 
   useEffect(() => {
-    // secretModeTest();
     callPost();
     callCategories();
     getViewedPost();
+    autoLogin();
   }, []);
-
-  useEffect(() => {
-    if (!isSecretMode) {
-      getTokenFromLocalStorage();
-    }
-  }, [isSecretMode]);
 
   return (
     <PostStateContext.Provider
@@ -235,7 +232,6 @@ function App() {
         viewedPost,
         selectedCategoryId,
         postListLength,
-        isSecretMode,
         isLogin,
         accessToken,
         userId,

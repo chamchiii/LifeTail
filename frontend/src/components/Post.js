@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-import { PostDispatchContext } from "../App";
+import { useEffect, useState } from "react";
 
-const Post = ({ data, isSecretMode }) => {
+const Post = ({ data }) => {
   const navigate = useNavigate();
   const [firstImg, setFirstImg] = useState("");
 

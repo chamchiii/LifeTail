@@ -1,4 +1,4 @@
-export const dateToStringYMD = (dateParma) => {
+const dateToStringYMD = (dateParma) => {
   const date = new Date(dateParma);
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
@@ -12,3 +12,5 @@ export const dateToStringYMD = (dateParma) => {
   }
   return `${year}.${month}.${day}`;
 };
+
+export { dateToStringYMD };

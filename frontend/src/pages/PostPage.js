@@ -17,7 +17,7 @@ const PostPage = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const { post, accessToken, isSecretMode } = useContext(PostStateContext);
+  const { post, accessToken } = useContext(PostStateContext);
   const { callPost, callCategories, getViewedPost } =
     useContext(PostDispatchContext);
 
@@ -44,7 +44,7 @@ const PostPage = () => {
         setSameCategoryPost(prevNextPost(sameCategoryPosts, postIndex));
       }
     }
-    if (id && !isSecretMode) {
+    if (id) {
       callComment(id);
       let viewedPost = [];
       const viewPost = JSON.parse(localStorage.getItem("viewedPost"));
@@ -58,7 +58,7 @@ const PostPage = () => {
       localStorage.setItem("viewedPost", JSON.stringify(viewedPost));
       getViewedPost();
     }
-  }, [id, post, isSecretMode]);
+  }, [id, post]);
 
   const callComment = async (postId) => {
     await axios
