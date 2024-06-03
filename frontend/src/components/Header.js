@@ -25,7 +25,8 @@ const Header = ({ search, isEdit, isNew, content }) => {
     handleToggleLoginModal,
     handleToggleLogin,
   } = useContext(PostDispatchContext);
-  const { isLogin, accessToken, userRole } = useContext(PostStateContext);
+  const { isLogin, accessToken, userId, userRole } =
+    useContext(PostStateContext);
 
   const [visible, setVisible] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -47,6 +48,30 @@ const Header = ({ search, isEdit, isNew, content }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [prevScrollPosition]);
+
+  useEffect(() => {
+    if (isNew) {
+      setTitle("");
+      setSubtitle("");
+    } else {
+      if (content) {
+        setTitle(content.title);
+        setSubtitle(content.subtitle);
+      }
+    }
+  }, [content]);
+
+  useEffect(() => {
+    if (!modalOpen) {
+      if (isNew) {
+        setTitle("");
+        setSubtitle("");
+      } else {
+        setTitle(content.title);
+        setSubtitle(content.subtitle);
+      }
+    }
+  }, [modalOpen]);
 
   const handleLogoClick = () => {
     callPost();
@@ -98,10 +123,10 @@ const Header = ({ search, isEdit, isNew, content }) => {
         .post(
           "/api/post",
           {
-            userId: 2,
+            userId: userId ? userId : "user",
             title: title,
             subtitle: subtitle,
-            content: content,
+            content: content.content,
             categoryId: 1,
           },
           { headers }
@@ -120,11 +145,11 @@ const Header = ({ search, isEdit, isNew, content }) => {
         .put(
           "/api/post",
           {
-            userId: 2,
+            userId: userId ? userId : "user",
             id: id,
             title: title,
             subtitle: subtitle,
-            content: content,
+            content: content.content,
             categoryId: 1,
           },
           { headers }
@@ -289,6 +314,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
             className="modal_title"
             type="text"
             placeholder="제목을 입력해 주세요."
+            value={title}
             onChange={handleChangeTitle}
             style={{
               width: "101%",
@@ -305,6 +331,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
             className="modal_subtitle"
             type="text"
             placeholder="글을 설명할 부제목을 입력해 주세요."
+            value={subtitle}
             onChange={handleChangeSubtitle}
             style={{
               width: "101%",

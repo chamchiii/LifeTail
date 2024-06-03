@@ -44,7 +44,12 @@ const LoginModal = ({ loginModalOpen }) => {
         setUserName("");
         setPassword("");
       })
-      .catch((err) => console.log("handleSignUpSubmit() ERROR : "));
+      .catch((err) => {
+        if (err.response.status === parseInt(409)) {
+          alert("존재하는 아이디 입니다.");
+        }
+        console.log("handleSignUpSubmit() ERROR : ");
+      });
   };
 
   const handleLoginSubmit = async (e) => {

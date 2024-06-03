@@ -60,8 +60,11 @@ const ToastUiEditor = ({ search, isEdit, isNew }) => {
         search={search}
         isEdit={isEdit}
         isNew={isNew}
-        content={postContent}
-        editData={{ title: targetPost.title }}
+        content={{
+          title: targetPost.title,
+          subtitle: targetPost.subtitle,
+          content: postContent,
+        }}
       />
       <Editor
         ref={editorRef}

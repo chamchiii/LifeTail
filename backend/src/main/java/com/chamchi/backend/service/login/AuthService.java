@@ -1,6 +1,7 @@
 package com.chamchi.backend.service.login;
 
 import com.chamchi.backend.config.security.jwt.TokenProvider;
+import com.chamchi.backend.customException.UserAlreadyExistsException;
 import com.chamchi.backend.domain.users.Users;
 import com.chamchi.backend.dto.login.LoginRequest;
 import com.chamchi.backend.dto.login.LoginResponse;
@@ -35,7 +36,7 @@ public class AuthService {
     @Transactional
     public LoginResponse signUp(LoginRequest loginRequest){
         if(usersRepository.existsByUserId(loginRequest.getUserId())){
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new UserAlreadyExistsException("이미 가입된 회원입니다.");
         }
         Users users = loginRequest.toUsers(passwordEncoder);
         return LoginResponse.of(usersRepository.save(users));
