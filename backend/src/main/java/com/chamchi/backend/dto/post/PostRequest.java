@@ -10,7 +10,7 @@ import lombok.Setter;
 public class PostRequest {
 
     //유저번호(sequence)
-    private Integer userId;
+    private String userId;
 
     private String title;
 
@@ -21,7 +21,7 @@ public class PostRequest {
     private Integer categoryId;
 
 
-    public PostRequest(Integer userId, String title,String subtitle, String content, Integer categoryId) {
+    public PostRequest(String userId, String title,String subtitle, String content, Integer categoryId) {
         this.userId = userId;
         this.title = title;
         this.subtitle = subtitle;

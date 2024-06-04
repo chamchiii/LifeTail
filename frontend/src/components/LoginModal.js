@@ -45,7 +45,7 @@ const LoginModal = ({ loginModalOpen }) => {
         setPassword("");
       })
       .catch((err) => {
-        if (err.response.status === parseInt(409)) {
+        if (parseInt(err.response.status) === 409) {
           alert("존재하는 아이디 입니다.");
         }
         console.log("handleSignUpSubmit() ERROR : ");

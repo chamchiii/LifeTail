@@ -251,6 +251,57 @@ textarea::placeholder {
 .login_and_out svg {
   display: block;
 }
+.modal_select_category_area{
+    width: 770px;
+    height: 20%;
+
+    padding-bottom: 3px;
+
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+.modal_select_category_area::-webkit-scrollbar{
+    height: 10px;
+}
+.modal_select_category_area::-webkit-scrollbar-track{
+    background-color: var(--light-bg-100);
+    border-radius: 10px;
+}
+.modal_select_category_area::-webkit-scrollbar-thumb{
+    background-color: var(--light-primary-400);
+    border-radius: 10px;
+    cursor: pointer;
+    height: 10px;
+}
+.modal_select_category_area::-webkit-scrollbar-thumb:hover{
+    background-color: var(--light-primary-300);
+}
+.modal_select_category_area button{
+    width: 80px;
+    height: 80%;
+
+    border: none;
+    border-radius: 30px;
+
+    background-color: var(--light-bg-100);
+
+    font-size: 14px;
+
+    flex-shrink: 0;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+.modal_select_category_area button:hover{
+    background-color: var(--light-primary-300);
+}
+.modal_select_category_area .modal_select_category_selected{
+    background-color: var(--light-primary-300);
+}
 
 /* Home */
 .Profile {

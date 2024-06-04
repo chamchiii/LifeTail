@@ -1,11 +1,14 @@
 package com.chamchi.backend.service.post;
 
+import com.chamchi.backend.customException.CustomUserException;
 import com.chamchi.backend.domain.category.Category;
 import com.chamchi.backend.domain.post.Post;
+import com.chamchi.backend.domain.users.Users;
 import com.chamchi.backend.dto.post.PostRequest;
 import com.chamchi.backend.dto.post.PostResponse;
 import com.chamchi.backend.dto.post.PostUpdateRequest;
 import com.chamchi.backend.repository.post.PostRepository;
+import com.chamchi.backend.repository.users.UsersRepository;
 import com.chamchi.backend.service.post.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UsersRepository usersRepository;
     private final ImageService imageService;
 
     @Value("${spring.resource-handler-temp-url}")
@@ -46,13 +50,16 @@ public class PostService {
         //임시저장 이미지 path -> 저장할 이미지 path 변경
         String changedContent = request.getContent().replaceAll(resourceHandlerTempUrl, resourceHandlerUrl);
         request.setContent(changedContent);
-        Post post = postRepository.save(new Post(request));
+        Users users = usersRepository.findByUserId(request.getUserId()).orElseThrow(() -> new CustomUserException.NoUserDataException("아이디에 해당되는 유저가 없습니다."));
+        Post post = postRepository.save(new Post(request, users.getId()));
         imageService.saveImage(post);
     }
 
     @Transactional
     public void updatePost(PostUpdateRequest request){
         Post post= postRepository.findById(request.getId()).orElseThrow(() -> new IllegalArgumentException("There is no DATA with id : " + request.getUserId()));
+        Users users = usersRepository.findByUserId(request.getUserId()).orElseThrow(() -> new CustomUserException.NoUserDataException("아이디에 해당되는 유저가 없습니다."));
+        post.setUsers(users);
         post.setTitle(request.getTitle());
         post.setSubtitle(request.getSubtitle());
         post.setContent(request.getContent());

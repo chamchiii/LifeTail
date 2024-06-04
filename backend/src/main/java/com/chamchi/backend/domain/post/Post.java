@@ -65,14 +65,14 @@ public class Post {
         this.createdDate = date;
     }
 
-    public Post(PostRequest request) {
+    public Post(PostRequest request, Integer id) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.subtitle = request.getSubtitle();
         this.category = new Category();
         this.category.setId(request.getCategoryId());
-        this.users = new Users();
-        this.users.setId(request.getUserId());
+        this.users = new Users(id);
+
     }
 
 }

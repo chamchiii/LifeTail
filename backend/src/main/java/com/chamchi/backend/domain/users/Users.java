@@ -37,6 +37,10 @@ public class Users {
         if (this.role == null) this.role = Role.USER;
     }
 
+    public Users(Integer id) {
+        this.id = id;
+    }
+
     public Users(UsersResponse usersResponse) {
         this.name = usersResponse.getName();
         this.userId = usersResponse.getUserId();

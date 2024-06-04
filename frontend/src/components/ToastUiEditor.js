@@ -64,6 +64,7 @@ const ToastUiEditor = ({ search, isEdit, isNew }) => {
           title: targetPost.title,
           subtitle: targetPost.subtitle,
           content: postContent,
+          id: isNew ? "" : targetPost.id,
         }}
       />
       <Editor

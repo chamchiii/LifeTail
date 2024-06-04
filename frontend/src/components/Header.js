@@ -1,23 +1,23 @@
-import React, { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, {useContext, useState, useEffect} from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import Modal from "react-modal";
 
-import { PostDispatchContext } from "../App";
-import { PostStateContext } from "../App";
-import { addToHeader } from "../util/AddHeader";
+import {PostDispatchContext} from "../App";
+import {PostStateContext} from "../App";
+import {addToHeader} from "../util/AddHeader";
 
-import { ReactComponent as Logo } from "../assets/logo/logo.svg";
-import { ReactComponent as HomeIcon } from "../assets/icons/home.svg";
-import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
-import { ReactComponent as LoginIcon } from "../assets/icons/loginIcon.svg";
-import { ReactComponent as LogoutIcon } from "../assets/icons/logoutIcon.svg";
+import {ReactComponent as Logo} from "../assets/logo/logo.svg";
+import {ReactComponent as HomeIcon} from "../assets/icons/home.svg";
+import {ReactComponent as SearchIcon} from "../assets/icons/search.svg";
+import {ReactComponent as LoginIcon} from "../assets/icons/loginIcon.svg";
+import {ReactComponent as LogoutIcon} from "../assets/icons/logoutIcon.svg";
 
 import Button from "./Button";
 import axios from "axios";
 
-const Header = ({ search, isEdit, isNew, content }) => {
+const Header = ({search, isEdit, isNew, content}) => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const {id} = useParams();
 
   const {
     callPost,
@@ -25,7 +25,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
     handleToggleLoginModal,
     handleToggleLogin,
   } = useContext(PostDispatchContext);
-  const { isLogin, accessToken, userId, userRole } =
+  const {isLogin, accessToken, userId, userRole, categoryList} =
     useContext(PostStateContext);
 
   const [visible, setVisible] = useState(true);
@@ -33,6 +33,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
 
@@ -53,10 +54,12 @@ const Header = ({ search, isEdit, isNew, content }) => {
     if (isNew) {
       setTitle("");
       setSubtitle("");
+      setSelectedCategory("");
     } else {
       if (content) {
         setTitle(content.title);
         setSubtitle(content.subtitle);
+        setSelectedCategory(content.id);
       }
     }
   }, [content]);
@@ -66,9 +69,11 @@ const Header = ({ search, isEdit, isNew, content }) => {
       if (isNew) {
         setTitle("");
         setSubtitle("");
+        setSelectedCategory("");
       } else {
         setTitle(content.title);
         setSubtitle(content.subtitle);
+        setSelectedCategory(content.id);
       }
     }
   }, [modalOpen]);
@@ -100,7 +105,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
 
   const handleClickBack = () => {
     callPost();
-    navigate(-1, { replace: true });
+    navigate(-1, {replace: true});
   };
 
   const handleChangeSearchKeyword = (e) => {
@@ -127,17 +132,22 @@ const Header = ({ search, isEdit, isNew, content }) => {
             title: title,
             subtitle: subtitle,
             content: content.content,
-            categoryId: 1,
+            categoryId: selectedCategory,
           },
-          { headers }
+          {headers}
         )
         .then(() => {
           alert("저장완료");
           callPost();
           callCategories();
-          navigate("/", { replace: true });
+          navigate("/", {replace: true});
         })
         .catch((err) => {
+          if (err.response.status === 404) {
+            alert("존재하지 않은 아이디 입니다.");
+          } else {
+            alert("오류로 인하여 저장하지 못했습니다.")
+          }
           console.log("handleSavePost()_new ERROR : ");
         });
     } else {
@@ -150,18 +160,22 @@ const Header = ({ search, isEdit, isNew, content }) => {
             title: title,
             subtitle: subtitle,
             content: content.content,
-            categoryId: 1,
+            categoryId: selectedCategory,
           },
-          { headers }
+          {headers}
         )
         .then(() => {
           alert("수정완료");
           callPost();
           callCategories();
-          navigate("/", { replace: true });
+          navigate("/", {replace: true});
         })
         .catch((err) => {
-          alert("오류로 인하여 수정 실패하였습니다.");
+          if (err.response.status === 404) {
+            alert("존재하지 않은 아이디 입니다.");
+          } else {
+            alert("오류로 인하여 저장하지 못했습니다.")
+          }
           console.log("handleSavePost()_edit ERROR : ");
         });
     }
@@ -172,8 +186,17 @@ const Header = ({ search, isEdit, isNew, content }) => {
       return;
     }
     handleToggleLogin(false);
-    navigate("/", { replace: true });
+    navigate("/", {replace: true});
   };
+
+  const handleClickCategoryButton = (id) => {
+    console.log("아이디값은 : ", id);
+    if(selectedCategory === id ){
+      setSelectedCategory("");
+    }else{
+      setSelectedCategory(id);
+    }
+  }
 
   return (
     <div>
@@ -199,7 +222,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
           </div>
           {search && (
             <div className="header_search">
-              <SearchIcon className="search_icon" />
+              <SearchIcon className="search_icon"/>
               <input
                 type="text"
                 placeholder="검색어를 입력해주세요..."
@@ -210,7 +233,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
           )}
           {isEdit ? (
             <div className="header_buttons">
-              <HomeIcon />
+              <HomeIcon/>
               <Button
                 name={"back"}
                 text={"뒤로가기"}
@@ -241,7 +264,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
             </div>
           ) : (
             <div className="header_buttons">
-              <HomeIcon />
+              <HomeIcon/>
               <Button
                 name={"new_post"}
                 text={"새 글 작성"}
@@ -280,8 +303,8 @@ const Header = ({ search, isEdit, isNew, content }) => {
             left: "0",
           },
           content: {
-            width: "55%",
-            height: "30%",
+            width: "1100px",
+            height: "360px",
             zIndex: "150",
             position: "absolute",
             top: "50%",
@@ -303,7 +326,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
           className="modal_info_area"
           style={{
             width: "100%",
-            height: "75%",
+            height: "80%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -335,7 +358,7 @@ const Header = ({ search, isEdit, isNew, content }) => {
             onChange={handleChangeSubtitle}
             style={{
               width: "101%",
-              height: "25%",
+              height: "30%",
               border: "none",
               fontSize: "36px",
               padding: "5px 30px 5px 30px ",
@@ -344,20 +367,16 @@ const Header = ({ search, isEdit, isNew, content }) => {
               borderRadius: "10px",
             }}
           />
-          <div className="modal_select_area">
-            <label>분류 : </label>
-            <select className="modal_select" style={{ border: "none" }}>
-              <option>분류1</option>
-              <option>분류2</option>
-              <option>분류3</option>
-              <option>분류4</option>
-            </select>
+          <div className="modal_select_category_area">
+            {categoryList.length > 0 ? categoryList.map((it) => (
+              <button className={`modal_select_category${selectedCategory === it.id ? "_selected" : ""}`} key={it.id}
+                      onClick={() => handleClickCategoryButton(it.id)}>{it.name}</button>)) : "카테고리가 없습니다."}
           </div>
         </div>
         <div
           className="modal_button_area"
           style={{
-            height: "25%",
+            height: "20%",
             width: "100%",
             display: "flex",
             justifyContent: "space-between",
