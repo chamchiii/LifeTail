@@ -17,7 +17,7 @@ const PostPage = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const { post, accessToken } = useContext(PostStateContext);
+  const { post, accessToken, isLogin, userRole } = useContext(PostStateContext);
   const { callPost, callCategories, getViewedPost } =
     useContext(PostDispatchContext);
 
@@ -92,10 +92,24 @@ const PostPage = () => {
   };
 
   const handleClickEdit = () => {
+    if(!isLogin){
+      alert("로그인 후 수정 가능합니다.");
+      return;
+    }else if(isLogin && userRole !== "ADMIN"){
+      alert("관리자만 수정 가능합니다.");
+      return;
+    }
     navigate(`/edit/${id}`);
   };
 
   const handleClickDelete = async () => {
+    if(!isLogin){
+      alert("로그인 후 삭제 가능합니다.");
+      return;
+    }else if(isLogin && userRole !== "ADMIN"){
+      alert("관리자만 삭제 가능합니다.");
+      return;
+    }
     let headers;
     if (accessToken && accessToken !== "") {
       headers = addToHeader(accessToken);

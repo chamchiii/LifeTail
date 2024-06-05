@@ -1,6 +1,6 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import axios from "axios";
 
 import Home from "./pages/Home";
@@ -10,8 +10,10 @@ import Edit from "./pages/Edit";
 import Search from "./pages/Search";
 import LoginModal from "./components/LoginModal";
 import CategoryPlusModal from "./components/CategoryPlusModal";
-import { dateToStringYMD } from "./util/DateUtill";
-import { encrypt, decrypt } from "./util/Cryp";
+import {dateToStringYMD} from "./util/DateUtill";
+import {encrypt, decrypt} from "./util/Cryp";
+import Footer from "./pages/Footer";
+import NotFound from "./pages/NotFound";
 
 export const PostStateContext = React.createContext();
 export const PostDispatchContext = React.createContext();
@@ -257,22 +259,26 @@ function App() {
         <BrowserRouter>
           <div className="App">
             <main>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/new" element={<New />} />
-                <Route path="/post/:id" element={<PostPage />} />
-                <Route path="/edit/:id" element={<Edit />} />
-                <Route
-                  path="/post/search/:searchKeyword"
-                  element={<Search />}
+              <div className="page_wrapper">
+                <Routes>
+                  <Route path="/" element={<Home/>}/>
+                  <Route path="/new" element={<New/>}/>
+                  <Route path="/post/:id" element={<PostPage/>}/>
+                  <Route path="/edit/:id" element={<Edit/>}/>
+                  <Route
+                    path="/post/search/:searchKeyword"
+                    element={<Search/>}
+                  />
+                  <Route path="/error/:code" element={<NotFound/>}/>
+                </Routes>
+                <LoginModal loginModalOpen={loginModalOpen}/>
+                <CategoryPlusModal
+                  categoryPlusModal={categoryPlusModal}
+                  categoryList={categoryList}
                 />
-              </Routes>
+              </div>
+              <Footer/>
             </main>
-            <LoginModal loginModalOpen={loginModalOpen} />
-            <CategoryPlusModal
-              categoryPlusModal={categoryPlusModal}
-              categoryList={categoryList}
-            />
           </div>
         </BrowserRouter>
       </PostDispatchContext.Provider>

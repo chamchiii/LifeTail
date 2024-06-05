@@ -24,6 +24,7 @@ const Header = ({search, isEdit, isNew, content}) => {
     callCategories,
     handleToggleLoginModal,
     handleToggleLogin,
+    getViewedPost,
   } = useContext(PostDispatchContext);
   const {isLogin, accessToken, userId, userRole, categoryList} =
     useContext(PostStateContext);
@@ -80,6 +81,8 @@ const Header = ({search, isEdit, isNew, content}) => {
 
   const handleLogoClick = () => {
     callPost();
+    callCategories();
+    getViewedPost();
     navigate("/");
   };
 
@@ -233,7 +236,7 @@ const Header = ({search, isEdit, isNew, content}) => {
           )}
           {isEdit ? (
             <div className="header_buttons">
-              <HomeIcon/>
+              <HomeIcon onClick={handleLogoClick}/>
               <Button
                 name={"back"}
                 text={"뒤로가기"}
@@ -264,7 +267,7 @@ const Header = ({search, isEdit, isNew, content}) => {
             </div>
           ) : (
             <div className="header_buttons">
-              <HomeIcon/>
+              <HomeIcon onClick={handleLogoClick}/>
               <Button
                 name={"new_post"}
                 text={"새 글 작성"}
