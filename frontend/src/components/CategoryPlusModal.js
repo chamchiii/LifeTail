@@ -1,15 +1,15 @@
-import { useState, useEffect, useContext } from "react";
-import { PostDispatchContext, PostStateContext } from "../App";
+import {useState, useEffect, useContext} from "react";
+import {PostDispatchContext, PostStateContext} from "../App";
 import Modal from "react-modal";
 import axios from "axios";
 import CagtegoryList from "./CategoryList";
-import { addToHeader } from "../util/AddHeader";
-import { compareArray } from "../util/CompareObj";
+import {addToHeader} from "../util/AddHeader";
+import {compareArray} from "../util/CompareObj";
 
-const CategoryPlusModal = ({ categoryPlusModal, categoryList }) => {
-  const { handleToggleCategoryPlusModal, callCategories } =
+const CategoryPlusModal = ({categoryPlusModal, categoryList}) => {
+  const {handleToggleCategoryPlusModal, callCategories} =
     useContext(PostDispatchContext);
-  const { accessToken } = useContext(PostStateContext);
+  const {accessToken} = useContext(PostStateContext);
 
   const [categories, setCategories] = useState([]);
   const [isModify, setIsModify] = useState(false);
@@ -51,19 +51,32 @@ const CategoryPlusModal = ({ categoryPlusModal, categoryList }) => {
       return;
     }
     const saveCategoyList = categories.map((it) =>
-      it.isNew ? { ...it, id: "" } : it
+      it.isNew ? {...it, id: ""} : it
     );
     let headers;
     if (accessToken) {
       headers = addToHeader(accessToken);
     }
     await axios
-      .post("/api/category", saveCategoyList, { headers })
+      .post("/api/category", saveCategoyList, {headers})
       .then((res) => {
         handleToggleCategoryPlusModal();
         callCategories();
       })
-      .catch((err) => console.log("handleClickSave() ERROR : "));
+      .catch((err) => {
+        console.log("handleClickSave() ERROR : ");
+        switch (parseInt(err.response.status)) {
+          case 401:
+            alert("인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다.");
+            break;
+          case 403:
+            alert("관리자 권한이 부여되지 않은 사용자입니다.");
+            break;
+          default:
+            alert("오류로 인하여 작업을 수행하지 못하였습니다.");
+            break;
+        }
+      });
   };
 
   const customModalStyles = {

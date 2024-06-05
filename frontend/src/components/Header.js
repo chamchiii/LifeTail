@@ -146,12 +146,18 @@ const Header = ({search, isEdit, isNew, content}) => {
           navigate("/", {replace: true});
         })
         .catch((err) => {
-          if (err.response.status === 404) {
-            alert("존재하지 않은 아이디 입니다.");
-          } else {
-            alert("오류로 인하여 저장하지 못했습니다.")
-          }
           console.log("handleSavePost()_new ERROR : ");
+          switch (parseInt(err.response.status)){
+            case 401:
+              alert("인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다.");
+              break;
+            case 403:
+              alert("관리자 권한이 부여되지 않은 사용자입니다.");
+              break;
+            default:
+              alert("오류로 인하여 작업을 수행하지 못하였습니다.");
+              break;
+          }
         });
     } else {
       await axios
@@ -174,12 +180,18 @@ const Header = ({search, isEdit, isNew, content}) => {
           navigate("/", {replace: true});
         })
         .catch((err) => {
-          if (err.response.status === 404) {
-            alert("존재하지 않은 아이디 입니다.");
-          } else {
-            alert("오류로 인하여 저장하지 못했습니다.")
-          }
           console.log("handleSavePost()_edit ERROR : ");
+          switch (parseInt(err.response.status)){
+            case 401:
+              alert("인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다.");
+              break;
+            case 403:
+              alert("관리자 권한이 부여되지 않은 사용자입니다.");
+              break;
+            default:
+              alert("오류로 인하여 작업을 수행하지 못하였습니다.");
+              break;
+          }
         });
     }
   };
@@ -412,8 +424,6 @@ const Header = ({search, isEdit, isNew, content}) => {
           >
             저장하기
           </button>
-          {/* <Button name={"modal_cancle"} text={"뒤로가기"} type={"negative"} />
-          <Button name={"modal_save"} text={"저장버튼"} type={"positive"} /> */}
         </div>
       </Modal>
     </div>

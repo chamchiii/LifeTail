@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
+import {useParams, useNavigate} from "react-router-dom";
 
-import { PostStateContext } from "../App";
-import { PostDispatchContext } from "../App";
-import { addToHeader } from "../util/AddHeader";
+import {PostStateContext} from "../App";
+import {PostDispatchContext} from "../App";
+import {addToHeader} from "../util/AddHeader";
 
 import ToastUiViewer from "../components/ToastUiViewer";
 import Header from "../components/Header";
@@ -11,14 +11,14 @@ import Button from "../components/Button";
 import axios from "axios";
 import CommentList from "../components/CommentList";
 import CommentEditor from "../components/CommentEditor";
-import { dateToStringYMD } from "../util/DateUtill";
+import {dateToStringYMD} from "../util/DateUtill";
 
 const PostPage = () => {
   const navigate = useNavigate();
 
-  const { id } = useParams();
-  const { post, accessToken, isLogin, userRole } = useContext(PostStateContext);
-  const { callPost, callCategories, getViewedPost } =
+  const {id} = useParams();
+  const {post, accessToken, isLogin, userRole} = useContext(PostStateContext);
+  const {callPost, callCategories, getViewedPost} =
     useContext(PostDispatchContext);
 
   const [data, setData] = useState();
@@ -38,7 +38,7 @@ const PostPage = () => {
         setData(targetPost);
       } else {
         alert("존재하지 않는 글 입니다. 홈으로 이동합니다.");
-        navigate("/", { replace: true });
+        navigate("/", {replace: true});
       }
       if (targetPost) {
         setSameCategoryPost(prevNextPost(sameCategoryPosts, postIndex));
@@ -92,10 +92,10 @@ const PostPage = () => {
   };
 
   const handleClickEdit = () => {
-    if(!isLogin){
+    if (!isLogin) {
       alert("로그인 후 수정 가능합니다.");
       return;
-    }else if(isLogin && userRole !== "ADMIN"){
+    } else if (isLogin && userRole !== "ADMIN") {
       alert("관리자만 수정 가능합니다.");
       return;
     }
@@ -103,10 +103,10 @@ const PostPage = () => {
   };
 
   const handleClickDelete = async () => {
-    if(!isLogin){
+    if (!isLogin) {
       alert("로그인 후 삭제 가능합니다.");
       return;
-    }else if(isLogin && userRole !== "ADMIN"){
+    } else if (isLogin && userRole !== "ADMIN") {
       alert("관리자만 삭제 가능합니다.");
       return;
     }
@@ -116,13 +116,26 @@ const PostPage = () => {
     }
     if (window.confirm("삭제하시겠습니까?")) {
       await axios
-        .delete(`/api/post/${id}`, { headers })
+        .delete(`/api/post/${id}`, {headers})
         .then(() => {
           callPost();
           callCategories();
-          navigate("/", { replace: true });
+          navigate("/", {replace: true});
         })
-        .catch((err) => console.log("handleClickDelete() ERROR : "));
+        .catch((err) => {
+          console.log("handleClickDelete() ERROR : ");
+          switch (parseInt(err.response.status)){
+            case 401:
+              alert("인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다.");
+              break;
+            case 403:
+              alert("관리자 권한이 부여되지 않은 사용자입니다.");
+              break;
+            default:
+              alert("오류로 인하여 작업을 수행하지 못하였습니다.");
+              break;
+          }
+        });
     }
   };
 
@@ -135,7 +148,7 @@ const PostPage = () => {
   } else {
     return (
       <div className="PostPage">
-        <Header isEdit={false} search={true} />
+        <Header isEdit={false} search={true}/>
         <div className="title_area">
           <h1>{data.title}</h1>
           <div className="information">
@@ -167,22 +180,22 @@ const PostPage = () => {
             <ul className="another_post_title">
               {sameCategoryPost.length >= 1
                 ? sameCategoryPost.map((it) =>
-                    it ? (
-                      <li
-                        className={`another_post${
-                          parseInt(it.id) === parseInt(id)
-                            ? "_list_selected"
-                            : "_list"
-                        }`}
-                        key={it.id}
-                        onClick={() => handleClickAnotherPostTitle(it.id)}
-                      >
-                        {it.title}
-                      </li>
-                    ) : (
-                      ""
-                    )
+                  it ? (
+                    <li
+                      className={`another_post${
+                        parseInt(it.id) === parseInt(id)
+                          ? "_list_selected"
+                          : "_list"
+                      }`}
+                      key={it.id}
+                      onClick={() => handleClickAnotherPostTitle(it.id)}
+                    >
+                      {it.title}
+                    </li>
+                  ) : (
+                    ""
                   )
+                )
                 : "해당 카테고리에 글이 존재하지 않습니다..."}
             </ul>
           </div>
@@ -190,7 +203,7 @@ const PostPage = () => {
         <div className="content_area">
           <ToastUiViewer content={data.content}></ToastUiViewer>
         </div>
-        <CommentEditor postId={id} callComment={callComment} />
+        <CommentEditor postId={id} callComment={callComment}/>
         <CommentList
           postId={id}
           commentList={commentList}
