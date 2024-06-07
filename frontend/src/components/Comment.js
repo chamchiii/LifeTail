@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { commentCheck } from "../util/Regex";
+import {useEffect, useRef, useState} from "react";
+import {commentCheck} from "../util/Regex";
 
-const Comment = ({ comment, callComment }) => {
+const Comment = ({comment, callComment}) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [password, setPassword] = useState("");
@@ -18,7 +18,10 @@ const Comment = ({ comment, callComment }) => {
     }
     await axios
       .delete(`/api/comment/${comment.id}`)
-      .then((res) => callComment(comment.postId))
+      .then((res) => {
+        setPassword("");
+        callComment(comment.postId);
+      })
       .catch((err) => console.log("deleteComment() ERROR : "));
   };
 
@@ -38,7 +41,11 @@ const Comment = ({ comment, callComment }) => {
         id: comment.id,
         content: changedContent,
       })
-      .then((res) => callComment(comment.postId))
+      .then((res) => {
+        setPassword("");
+        callComment(comment.postId);
+        setIsEdit(false);
+      })
       .catch((err) => console.log("updateComment() ERROR : "));
   };
 
@@ -68,13 +75,14 @@ const Comment = ({ comment, callComment }) => {
     setIsEdit(false);
   };
 
-  useEffect(() => {}, [changedContent]);
+  useEffect(() => {
+  }, [changedContent]);
 
   return (
     <div className="Comment">
       <div className="comment_info_area">
         <div className="comment_info_writer">
-          {comment.writer} / {comment.id} / {comment.password}
+          {comment.writer}
         </div>
         <div className="comment_info_create_date">{comment.createDt}</div>
       </div>

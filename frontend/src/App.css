@@ -451,6 +451,8 @@ textarea::placeholder {
     justify-content: center;
 
     width: 1100px;
+
+    padding: 50px 0px 50px 0px;
 }
 
 /* LeftMenu */
@@ -1063,10 +1065,10 @@ textarea::placeholder {
     border-top: 1px solid var(--light-bg-300);
     border-bottom: 1px solid var(--light-bg-300);
 
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     display: flex;
     flex-direction: column;
@@ -1138,7 +1140,7 @@ textarea::placeholder {
 
     /* border-bottom: 1px solid var(--light-bg-300); */
 
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
 
     display: flex;
     flex-direction: column;
@@ -1166,7 +1168,7 @@ textarea::placeholder {
     width: 100%;
     height: 30px;
 
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     display: flex;
     flex-direction: row;
