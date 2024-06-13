@@ -4,13 +4,13 @@ import { useContext, useEffect, useState } from "react";
 import { ReactComponent as Plus } from "../assets/icons/add.svg";
 
 const LeftMenu = () => {
-  const { categoryList, postListLength, userRole } =
+  const { categoryList, postListLength, userRole, selectedCategoryId } =
     useContext(PostStateContext);
   const { changeCategoryId, handleToggleCategoryPlusModal } =
     useContext(PostDispatchContext);
 
   const [categories, setCategories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(-1);
+  const [selectedCategory, setSelectedCategory] = useState(-1);
   const [viewAll, setViewAll] = useState(true);
 
   useEffect(() => {
@@ -20,17 +20,23 @@ const LeftMenu = () => {
   }, [categoryList]);
 
   useEffect(() => {
-    if (!selectedCategoryId || parseInt(selectedCategoryId) === -1) {
-      changeCategoryId(-1);
-      setViewAll(true);
-    } else {
-      changeCategoryId(selectedCategoryId);
-      setViewAll(false);
+    if(selectedCategoryId){
+      setSelectedCategory(selectedCategoryId);
     }
   }, [selectedCategoryId]);
 
+  useEffect(() => {
+    if (!selectedCategory || parseInt(selectedCategory) === -1) {
+      changeCategoryId(-1);
+      setViewAll(true);
+    } else {
+      changeCategoryId(selectedCategory);
+      setViewAll(false);
+    }
+  }, [selectedCategory]);
+
   const handleToggleSelected = (categoryId) => {
-    setSelectedCategoryId(categoryId === selectedCategoryId ? -1 : categoryId);
+    setSelectedCategory(categoryId === selectedCategory ? -1 : categoryId);
   };
 
   const handleClickPlus = () => {
@@ -55,7 +61,7 @@ const LeftMenu = () => {
         <ul>
           <li
             className={`categories${
-              selectedCategoryId === -1 && viewAll ? "_selected" : ""
+              selectedCategory === -1 && viewAll ? "_selected" : ""
             }`}
             onClick={() => handleToggleSelected(-1)}
           >
@@ -65,7 +71,7 @@ const LeftMenu = () => {
             categories.map((it) => (
               <li
                 className={`categories${
-                  selectedCategoryId === it.id ? "_selected" : ""
+                  selectedCategory === it.id ? "_selected" : ""
                 }`}
                 key={it.id}
                 onClick={() => handleToggleSelected(it.id)}

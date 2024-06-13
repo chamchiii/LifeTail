@@ -1,23 +1,23 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Header from "../components/Header";
-import {PostStateContext} from "../App";
+import { PostStateContext } from "../App";
 
 import "@toast-ui/editor/dist/toastui-editor.css";
-import {Editor} from "@toast-ui/react-editor";
+import { Editor } from "@toast-ui/react-editor";
 
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
 import "@toast-ui/editor/dist/i18n/ko-kr";
 
-import {addToHeader} from "../util/AddHeader";
+import { addToHeader } from "../util/AddHeader";
 
-const ToastUiEditor = ({search, isEdit, isNew}) => {
+const ToastUiEditor = ({ search, isEdit, isNew }) => {
   const editorRef = useRef(null);
-  const {id} = useParams();
-  const {post, accessToken} = useContext(PostStateContext);
+  const { id } = useParams();
+  const { post, accessToken } = useContext(PostStateContext);
   const [postContent, setPostContent] = useState("");
   const [targetPost, setTargetPost] = useState("");
 
@@ -43,15 +43,17 @@ const ToastUiEditor = ({search, isEdit, isNew}) => {
     const formData = new FormData();
     formData.append("image", blob);
     await axios
-      .post("/api/post/image", formData, {headers})
+      .post("/api/post/image", formData, { headers })
       .then((res) => {
         callback(res.data);
       })
       .catch((err) => {
         console.log("onUploadImage() ERROR : ");
-        switch (parseInt(err.response.status)){
+        switch (parseInt(err.response.status)) {
           case 401:
-            alert("인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다.");
+            alert(
+              "인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다."
+            );
             break;
           case 403:
             alert("관리자 권한이 부여되지 않은 사용자입니다.");
@@ -91,7 +93,7 @@ const ToastUiEditor = ({search, isEdit, isNew}) => {
         language="ko-KR"
         usageStatistics={false}
         onChange={handleChange}
-        hooks={{addImageBlobHook: onUploadImage}}
+        hooks={{ addImageBlobHook: onUploadImage }}
         toolbarItems={[
           ["heading", "bold", "italic", "strike"],
           ["hr", "quote"],

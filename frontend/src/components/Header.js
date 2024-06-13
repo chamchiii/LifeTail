@@ -25,6 +25,7 @@ const Header = ({search, isEdit, isNew, content}) => {
     handleToggleLoginModal,
     handleToggleLogin,
     getViewedPost,
+    changeCategoryId,
   } = useContext(PostDispatchContext);
   const {isLogin, accessToken, userId, userRole, categoryList} =
     useContext(PostStateContext);
@@ -83,6 +84,7 @@ const Header = ({search, isEdit, isNew, content}) => {
     callPost();
     callCategories();
     getViewedPost();
+    changeCategoryId(-1);
     navigate("/");
   };
 

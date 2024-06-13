@@ -1,8 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
+import {PostDispatchContext} from "../App";
 
-const Post = ({ data }) => {
+const Post = ({data}) => {
   const navigate = useNavigate();
+  const {changeCategoryId} = useContext(PostDispatchContext);
+
   const [firstImg, setFirstImg] = useState("");
 
   let viewedPost = [];
@@ -14,6 +17,10 @@ const Post = ({ data }) => {
   const goDetail = () => {
     navigate(`/post/${data.id}`);
   };
+
+  const handleClickCategory = (categoryId) => {
+    changeCategoryId(categoryId);
+  }
 
   useEffect(() => {
     if (data) {
@@ -30,7 +37,7 @@ const Post = ({ data }) => {
 
   return (
     <div className="Post">
-      <img src={firstImg} onClick={goDetail} alt="첫 번째 이미지" />
+      <img src={firstImg} onClick={goDetail} alt="첫 번째 이미지"/>
       <div className="title">
         <h2 onClick={goDetail}>{data.title}</h2>
       </div>
@@ -38,7 +45,7 @@ const Post = ({ data }) => {
         <div onClick={goDetail}>{data.subtitle}</div>
       </div>
       <div className="post_category">
-        <div>{data.categoryName}</div>
+        <div onClick={() => handleClickCategory(data.categoryId)}>{data.categoryName}</div>
       </div>
       <div className="date">{data.createdDate}</div>
     </div>

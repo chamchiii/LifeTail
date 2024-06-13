@@ -629,12 +629,16 @@ textarea::placeholder {
 }
 
 .Post .post_category div {
-    border: 1px solid var(--light-primary-300);
+    border: none;
     border-radius: 30px;
-
+    background-color: var(--light-primary-300);
     padding: 2px 10px 2px 10px;
-
     margin-right: 20px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.Post .post_category div:hover{
+    background-color: var(--light-primary-400);
 }
 
 .Post .date {
@@ -795,10 +799,6 @@ textarea::placeholder {
     padding-left: 36px;
 
     width: 720px;
-
-    /* overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap; */
 }
 
 .PostPage .title_area .another_post .another_post_title li::marker {
@@ -808,15 +808,20 @@ textarea::placeholder {
 
 .PostPage .title_area .another_post .another_post_title li {
     padding-bottom: 5px;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 .PostPage .title_area .another_post .another_post_list {
     color: var(--light-bg-300);
+    cursor: pointer;
+}
+.PostPage .title_area .another_post .another_post_list:hover {
+    color: var(--light-primary-300);
 }
 
 .PostPage .title_area .another_post .another_post_list_selected {
-    color: var(--light-primary-300);
+    color: var(--light-text-200);
+    cursor: default;
 }
 
 .PostPage .content_area {
