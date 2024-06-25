@@ -15,6 +15,12 @@ repositories {
     mavenCentral()
 }
 
+def dev = 'dev'
+def test = 'test'
+def prod = 'prod'
+
+def activeProfile = project.hasProperty('springProfiles') ? project.springProfiles : prod
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.6.2'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -34,4 +40,19 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    enabled = true
+    archiveFileName = "${project.name}.jar"
+}
+
+bootJar {
+    if (activeProfile == dev) {
+        archiveFileName = "${project.name}-dev.jar"
+    } else if (activeProfile == test) {
+        archiveFileName = "${project.name}-test.jar"
+    } else {
+        archiveFileName = "${project.name}.jar"
+    }
 }

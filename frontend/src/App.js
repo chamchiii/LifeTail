@@ -1,6 +1,6 @@
 import "./App.css";
-import React, {useEffect, useState} from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 
 import Home from "./pages/Home";
@@ -10,10 +10,11 @@ import Edit from "./pages/Edit";
 import Search from "./pages/Search";
 import LoginModal from "./components/LoginModal";
 import CategoryPlusModal from "./components/CategoryPlusModal";
-import {dateToStringYMD} from "./util/DateUtill";
-import {encrypt, decrypt} from "./util/Cryp";
+import { dateToStringYMD } from "./util/DateUtill";
+import { encrypt, decrypt } from "./util/Cryp";
 import Footer from "./pages/Footer";
 import NotFound from "./pages/NotFound";
+import { Mobile, PC } from "./util/Responsive";
 
 export const PostStateContext = React.createContext();
 export const PostDispatchContext = React.createContext();
@@ -256,31 +257,48 @@ function App() {
           handleToggleCategoryPlusModal,
         }}
       >
-        <BrowserRouter>
-          <div className="App">
-            <main>
-              <div className="page_wrapper">
-                <Routes>
-                  <Route path="/" element={<Home/>}/>
-                  <Route path="/new" element={<New/>}/>
-                  <Route path="/post/:id" element={<PostPage/>}/>
-                  <Route path="/edit/:id" element={<Edit/>}/>
-                  <Route
-                    path="/post/search/:searchKeyword"
-                    element={<Search/>}
+        <PC>
+          <BrowserRouter>
+            <div className="App">
+              <main>
+                <div className="page_wrapper">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/new" element={<New />} />
+                    <Route path="/post/:id" element={<PostPage />} />
+                    <Route path="/edit/:id" element={<Edit />} />
+                    <Route
+                      path="/post/search/:searchKeyword"
+                      element={<Search />}
+                    />
+                    <Route path="/error/:code" element={<NotFound />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                  <LoginModal loginModalOpen={loginModalOpen} />
+                  <CategoryPlusModal
+                    categoryPlusModal={categoryPlusModal}
+                    categoryList={categoryList}
                   />
-                  <Route path="/error/:code" element={<NotFound/>}/>
-                </Routes>
-                <LoginModal loginModalOpen={loginModalOpen}/>
-                <CategoryPlusModal
-                  categoryPlusModal={categoryPlusModal}
-                  categoryList={categoryList}
-                />
-              </div>
-              <Footer/>
-            </main>
-          </div>
-        </BrowserRouter>
+                </div>
+                <Footer />
+              </main>
+            </div>
+          </BrowserRouter>
+        </PC>
+        <Mobile>
+          <BrowserRouter>
+            <div className="App">
+              <main>
+                <div className="page_wrapper">
+                  <Routes>
+                    <Route path="/" element={<NotFound errCode={3} />} />
+                    <Route path="*" element={<NotFound errCode={3} />} />
+                  </Routes>
+                </div>
+              </main>
+            </div>
+          </BrowserRouter>
+        </Mobile>
       </PostDispatchContext.Provider>
     </PostStateContext.Provider>
   );
