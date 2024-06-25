@@ -13,13 +13,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Value("${spring.allowed-origins}")
-    private String allowedOrigins;
+    @Value("${spring.allowed-origins-local}")
+    private String allowedOriginsLocal;
+    @Value("${spring.allowed-origins-api-server}")
+    private String allowedOriginsApiServer;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(allowedOrigins)
+                .allowedOrigins(allowedOriginsLocal, allowedOriginsApiServer)
                 .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE", "HEAD")
                 .allowedHeaders("*");
     }
