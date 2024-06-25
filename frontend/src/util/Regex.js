@@ -1,5 +1,5 @@
 const idCheck = (id) => {
-  const idRegex = /^[a-zA-Z0-9]{3,}$/;
+  const idRegex = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{4,16}$/;
 
   if (idRegex.test(id)) {
     return true;
@@ -9,7 +9,7 @@ const idCheck = (id) => {
 };
 
 const pdCheck = (password) => {
-  const pdRegex = /^[a-zA-Z0-9]{3,}$/;
+  const pdRegex = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{4,16}$/;
 
   if (pdRegex.test(password)) {
     return true;

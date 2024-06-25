@@ -1,21 +1,29 @@
 import Modal from "react-modal";
 import { PostDispatchContext } from "../App";
 import { useContext, useEffect, useState } from "react";
+import axios from "axios";
 
 import { ReactComponent as BackButton } from "../assets/icons/loginCancle.svg";
 import { ReactComponent as LoginID } from "../assets/icons/loginID.svg";
 import { ReactComponent as LoginPW } from "../assets/icons/loginPassword.svg";
-import axios from "axios";
+import { idCheck, pdCheck } from "../util/Regex";
+import { useRef } from "react";
 
 const LoginModal = ({ loginModalOpen }) => {
   const { handleToggleLoginModal, setToken } = useContext(PostDispatchContext);
+  const userNameRef = useRef();
+  const passwordRef = useRef();
 
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [userNamePlaceholder, setUserNamePlaceholder] = useState("");
+  const [passwordPlaceholder, setPasswordPlaceholder] = useState("");
 
   useEffect(() => {
     setUserName("");
     setPassword("");
+    setUserNamePlaceholder("아이디");
+    setPasswordPlaceholder("비밀번호");
   }, [loginModalOpen]);
 
   const handleUserNameChange = (e) => {
@@ -27,6 +35,19 @@ const LoginModal = ({ loginModalOpen }) => {
   };
 
   const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+    if (!idCheck(userName)) {
+      setUserName("");
+      userNameRef.current.focus();
+      setUserNamePlaceholder("4~16자 사이로 입력해 주세요.");
+      return;
+    }
+    if (!pdCheck(password)) {
+      setPassword("");
+      passwordRef.current.focus();
+      setPasswordPlaceholder("4~16자 사이로 입력해 주세요.");
+      return;
+    }
     if (
       !window.confirm(
         "회원가입을 진행하시겠습니까? 반드시 주의사항을 읽어주세요."
@@ -54,6 +75,18 @@ const LoginModal = ({ loginModalOpen }) => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    if (!idCheck(userName)) {
+      setUserName("");
+      userNameRef.current.focus();
+      setUserNamePlaceholder("아이디를 다시 한번 확인해 주세요.");
+      return;
+    }
+    if (!pdCheck(password)) {
+      setPassword("");
+      passwordRef.current.focus();
+      setPasswordPlaceholder("비밀번호를 다시 한번 확인해 주세요.");
+      return;
+    }
     await axios
       .post("/auth/login", {
         userId: userName,
@@ -131,7 +164,8 @@ const LoginModal = ({ loginModalOpen }) => {
                 id="userName"
                 value={userName}
                 onChange={handleUserNameChange}
-                placeholder="아이디"
+                placeholder={userNamePlaceholder}
+                ref={userNameRef}
                 required
               />
             </div>
@@ -142,7 +176,8 @@ const LoginModal = ({ loginModalOpen }) => {
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
-                placeholder="비밀번호"
+                placeholder={passwordPlaceholder}
+                ref={passwordRef}
                 required
               />
             </div>

@@ -29,13 +29,13 @@ const CommentEditor = ({ postId, callComment }) => {
     if (!idCheck(nickname)) {
       setNickname("");
       nicknameRef.current.focus();
-      setNicknamePlaceholder("3글자 이상의 영어or숫자or혼합");
+      setNicknamePlaceholder("4~16자 사이로 입력해 주세요.");
       return;
     }
     if (!pdCheck(password)) {
       setPassword("");
       passwordRef.current.focus();
-      setPasswordPlaceholder("3글자 이상의 영어or숫자or혼합");
+      setPasswordPlaceholder("4~16자 사이로 입력해 주세요.");
       return;
     }
     if (!commentCheck(comment)) {
