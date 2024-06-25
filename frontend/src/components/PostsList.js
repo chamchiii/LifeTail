@@ -37,7 +37,11 @@ const PostsList = ({ isSearch, post }) => {
   return (
     <div className="PostList">
       <section className="postsList">
-        {slicePostList.length > 0 ? (
+        {post.length < 1 ? (
+          <div className="no_posts_with_category">
+            현재 작성된 글이 없습니다.
+          </div>
+        ) : slicePostList.length > 0 ? (
           slicePostList.map((it) => <Post key={it.id} data={it}></Post>)
         ) : (
           <div className="no_posts_with_category">
