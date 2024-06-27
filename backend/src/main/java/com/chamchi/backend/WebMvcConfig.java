@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
     @Value("${spring.allowed-origins-local}")
     private String allowedOriginsLocal;
-    @Value("${spring.allowed-origins-api-server}")
+    @Value("${spring.allowed-origins-web-server}")
     private String allowedOriginsApiServer;
 
     @Override
