@@ -9,9 +9,7 @@ const CommentList = ({ postId, commentList, callComment }) => {
   const [countPerPage, setCountPerPage] = useState(10);
 
   useEffect(() => {
-    if (commentList.length > 0) {
-      setComments(commentList);
-    }
+    setComments(commentList);
   }, [commentList]);
 
   useEffect(() => {

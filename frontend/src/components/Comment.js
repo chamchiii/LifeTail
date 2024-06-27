@@ -75,9 +75,6 @@ const Comment = ({comment, callComment}) => {
     setIsEdit(false);
   };
 
-  useEffect(() => {
-  }, [changedContent]);
-
   return (
     <div className="Comment">
       <div className="comment_info_area">

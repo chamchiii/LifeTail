@@ -207,7 +207,6 @@ const Header = ({search, isEdit, isNew, content}) => {
   };
 
   const handleClickCategoryButton = (id) => {
-    console.log("아이디값은 : ", id);
     if(selectedCategory === id ){
       setSelectedCategory("");
     }else{
@@ -385,9 +384,19 @@ const Header = ({search, isEdit, isNew, content}) => {
             }}
           />
           <div className="modal_select_category_area">
-            {categoryList.length > 0 ? categoryList.map((it) => (
-              <button className={`modal_select_category${selectedCategory === it.id ? "_selected" : ""}`} key={it.id}
-                      onClick={() => handleClickCategoryButton(it.id)}>{it.name}</button>)) : "카테고리가 없습니다."}
+            {categoryList.length > 0
+              ? categoryList.map((it) => (
+                  <button
+                    className={`modal_select_category${
+                      selectedCategory === it.id ? "_selected" : ""
+                    }`}
+                    key={it.id}
+                    onClick={() => handleClickCategoryButton(it.id)}
+                  >
+                    {it.name}
+                  </button>
+                ))
+              : "카테고리가 없습니다."}
           </div>
         </div>
         <div
