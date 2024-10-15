@@ -26,7 +26,7 @@ const NotFound = ({ errCode }) => {
       case 2:
         return "관리자만 접근 가능한 페이지입니다.";
       case 3:
-        return "모바일 페이지는 현재 개발 중에 있습니다. 불편을 드려 죄송합니다.";
+        return "모바일 페이지는 현재 제공하지 않고 있습니다. 죄송합니다.";
       default:
         return "Sorry, the page you are looking for does not exist.";
     }

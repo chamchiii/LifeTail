@@ -53,7 +53,7 @@ function App() {
         setPost(resMap);
         setPostListLength(resMap.length);
       })
-      .catch((err) => console.log("callPost() ERROR : "));
+      .catch((err) => console.log("callPost() ERROR : ", err));
   };
 
   const callCategories = async () => {

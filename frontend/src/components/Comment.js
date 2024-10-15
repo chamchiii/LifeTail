@@ -1,8 +1,8 @@
 import axios from "axios";
-import {useEffect, useRef, useState} from "react";
-import {commentCheck} from "../util/Regex";
+import { useEffect, useRef, useState } from "react";
+import { commentCheck } from "../util/Regex";
 
-const Comment = ({comment, callComment}) => {
+const Comment = ({ comment, callComment }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [password, setPassword] = useState("");
@@ -78,9 +78,7 @@ const Comment = ({comment, callComment}) => {
   return (
     <div className="Comment">
       <div className="comment_info_area">
-        <div className="comment_info_writer">
-          {comment.writer}
-        </div>
+        <div className="comment_info_writer">{comment.writer}</div>
         <div className="comment_info_create_date">{comment.createDt}</div>
       </div>
       <div className="comment_content_area">

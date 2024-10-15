@@ -1,5 +1,5 @@
-import {useContext, useEffect, useState} from "react";
-import {PostStateContext} from "../App";
+import { useContext, useEffect, useState } from "react";
+import { PostStateContext } from "../App";
 import Modal from "react-modal";
 
 import Header from "../components/Header";
@@ -9,7 +9,8 @@ import PostsList from "../components/PostsList";
 import RightMenu from "../components/RightMenu";
 
 const Home = () => {
-  const {post, categoryList, selectedCategoryId} = useContext(PostStateContext);
+  const { post, categoryList, selectedCategoryId } =
+    useContext(PostStateContext);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState();
@@ -38,28 +39,28 @@ const Home = () => {
 
   return (
     <div className="Home">
-      <Header/>
+      <Header />
       <div className="profile_area">
-        <Profile/>
+        <Profile />
       </div>
       <div className="selected_category_area">
         <div className="selected_category_selected">
           {parseInt(selectedCategoryId) === -1
             ? "전체 글"
             : selectedCategory
-              ? selectedCategory.name
-              : "로딩중..."}
+            ? selectedCategory.name
+            : "로딩중..."}
         </div>
       </div>
       <div className="content_area">
         <div className="left_menu_wrapper">
-          <LeftMenu/>
+          <LeftMenu />
         </div>
         <div className="post_list_wrapper">
-          <PostsList post={post} isSearch={false}/>
+          <PostsList post={post} isSearch={false} />
         </div>
         <div className="right_menu_wrapper">
-          <RightMenu/>
+          <RightMenu />
         </div>
       </div>
       <Modal
