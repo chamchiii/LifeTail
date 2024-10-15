@@ -1,23 +1,23 @@
-import React, {useContext, useState, useEffect} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Modal from "react-modal";
 
-import {PostDispatchContext} from "../App";
-import {PostStateContext} from "../App";
-import {addToHeader} from "../util/AddHeader";
+import { PostDispatchContext } from "../App";
+import { PostStateContext } from "../App";
+import { addToHeader } from "../util/AddHeader";
 
-import {ReactComponent as Logo} from "../assets/logo/logo.svg";
-import {ReactComponent as HomeIcon} from "../assets/icons/home.svg";
-import {ReactComponent as SearchIcon} from "../assets/icons/search.svg";
-import {ReactComponent as LoginIcon} from "../assets/icons/loginIcon.svg";
-import {ReactComponent as LogoutIcon} from "../assets/icons/logoutIcon.svg";
+import { ReactComponent as Logo } from "../assets/logo/logo.svg";
+import { ReactComponent as HomeIcon } from "../assets/icons/home.svg";
+import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
+import { ReactComponent as LoginIcon } from "../assets/icons/loginIcon.svg";
+import { ReactComponent as LogoutIcon } from "../assets/icons/logoutIcon.svg";
 
 import Button from "./Button";
 import axios from "axios";
 
-const Header = ({search, isEdit, isNew, content}) => {
+const Header = ({ search, isEdit, isNew, content }) => {
   const navigate = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
 
   const {
     callPost,
@@ -27,7 +27,7 @@ const Header = ({search, isEdit, isNew, content}) => {
     getViewedPost,
     changeCategoryId,
   } = useContext(PostDispatchContext);
-  const {isLogin, accessToken, userId, userRole, categoryList} =
+  const { isLogin, accessToken, userId, userRole, categoryList } =
     useContext(PostStateContext);
 
   const [visible, setVisible] = useState(true);
@@ -110,7 +110,7 @@ const Header = ({search, isEdit, isNew, content}) => {
 
   const handleClickBack = () => {
     callPost();
-    navigate(-1, {replace: true});
+    navigate(-1, { replace: true });
   };
 
   const handleChangeSearchKeyword = (e) => {
@@ -139,19 +139,22 @@ const Header = ({search, isEdit, isNew, content}) => {
             content: content.content,
             categoryId: selectedCategory,
           },
-          {headers}
+          { headers }
         )
         .then(() => {
           alert("저장완료");
           callPost();
           callCategories();
-          navigate("/", {replace: true});
+          changeCategoryId(-1);
+          navigate("/", { replace: true });
         })
         .catch((err) => {
           console.log("handleSavePost()_new ERROR : ");
-          switch (parseInt(err.response.status)){
+          switch (parseInt(err.response.status)) {
             case 401:
-              alert("인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다.");
+              alert(
+                "인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다."
+              );
               break;
             case 403:
               alert("관리자 권한이 부여되지 않은 사용자입니다.");
@@ -173,19 +176,22 @@ const Header = ({search, isEdit, isNew, content}) => {
             content: content.content,
             categoryId: selectedCategory,
           },
-          {headers}
+          { headers }
         )
         .then(() => {
           alert("수정완료");
           callPost();
           callCategories();
-          navigate("/", {replace: true});
+          changeCategoryId(-1);
+          navigate("/", { replace: true });
         })
         .catch((err) => {
           console.log("handleSavePost()_edit ERROR : ");
-          switch (parseInt(err.response.status)){
+          switch (parseInt(err.response.status)) {
             case 401:
-              alert("인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다.");
+              alert(
+                "인증되지 않은 사용자입니다. 회원가입 또는 로그인 후 재실행 부탁드립니다."
+              );
               break;
             case 403:
               alert("관리자 권한이 부여되지 않은 사용자입니다.");
@@ -203,16 +209,16 @@ const Header = ({search, isEdit, isNew, content}) => {
       return;
     }
     handleToggleLogin(false);
-    navigate("/", {replace: true});
+    navigate("/", { replace: true });
   };
 
   const handleClickCategoryButton = (id) => {
-    if(selectedCategory === id ){
+    if (selectedCategory === id) {
       setSelectedCategory("");
-    }else{
+    } else {
       setSelectedCategory(id);
     }
-  }
+  };
 
   return (
     <div>
@@ -238,7 +244,7 @@ const Header = ({search, isEdit, isNew, content}) => {
           </div>
           {search && (
             <div className="header_search">
-              <SearchIcon className="search_icon"/>
+              <SearchIcon className="search_icon" />
               <input
                 type="text"
                 placeholder="검색어를 입력해주세요..."
@@ -249,7 +255,7 @@ const Header = ({search, isEdit, isNew, content}) => {
           )}
           {isEdit ? (
             <div className="header_buttons">
-              <HomeIcon onClick={handleLogoClick}/>
+              <HomeIcon onClick={handleLogoClick} />
               <Button
                 name={"back"}
                 text={"뒤로가기"}
@@ -280,7 +286,7 @@ const Header = ({search, isEdit, isNew, content}) => {
             </div>
           ) : (
             <div className="header_buttons">
-              <HomeIcon onClick={handleLogoClick}/>
+              <HomeIcon onClick={handleLogoClick} />
               <Button
                 name={"new_post"}
                 text={"새 글 작성"}
